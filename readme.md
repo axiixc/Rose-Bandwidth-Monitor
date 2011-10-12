@@ -7,6 +7,7 @@ It also displays the last 36 hours of entries as a graph, although work to make 
 The bandwidth monitor is divided into two parts, the web server and the scrape server. Both components currently run independently of each other.
 
 **To start the web server:** `ruby server.rb`
+
 **To start the scrape server:** `ruby scrape_server.rb`
 
 By default the scrape server will start in development mode, to put it into production use the `--production` flag.
@@ -14,13 +15,13 @@ By default the scrape server will start in development mode, to put it into prod
 # Installation
 
 The following gems are required to run RBM
-* sinatra
-* datamapper
-* haml
-* datamapper
-* nokogiri
-* json
-* boxcar_api (httparty)
+- sinatra
+- datamapper
+- haml
+- datamapper
+- nokogiri
+- json
+- boxcar_api (httparty)
 
 # TODO
 
