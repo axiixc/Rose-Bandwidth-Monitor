@@ -1,0 +1,9 @@
+.container
+    %h1 All Users
+    .content
+        - index = false
+        - users = Rose::User.all( :public_stats => true, :order => [ :username.asc ] )
+        - users.each do |user|
+            %p{:class => (index = !index) ? 'primary' : 'secondary'}
+                %a{:href => url("/profile/#{user.username}")}= user.username
+        %p{:style => 'text-align: center;'}= "#{users.size} users found"

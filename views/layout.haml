@@ -1,0 +1,51 @@
+!!! 5
+%html
+    %head
+        %title Bandwidth Monitor
+        %link{:rel => :stylesheet, :href => url('/css/style.css')}
+        %meta{:name => "viewport", :content => "width=device-width, initial-scale=1, maximum-scale=1"}
+        %meta{:name => "apple-mobile-web-app-capable", :content => "yes"}
+        %script{:src => "https://www.google.com/jsapi"}
+        %script{:src => "http://code.jquery.com/jquery-1.6.4.min.js"}
+            
+    %body
+        %div.body_wrap
+            %div.nav
+                %div
+                    %ul
+                        - if @session_user.nil?
+                            %li>
+                                %a{:href => url('/userlist')}> stats
+                            %li>
+                                %a{:href => url('/login')}> login
+                            %li>
+                                %a{:href => url('/register')}> register
+                        - else
+                            %li>
+                                %a{:href => url('/')}>= @session_user.username
+                            %li>
+                                %a{:href => url('/userlist')}> stats
+                            %li>
+                                %a{:href => url('/logout')}> logout
+                    %h1
+                        %a{:href => url('/')}
+                            %img{:src => url('/images/nav-logo.png')}
+                            Bandwidth Monitor
+            
+            - if not (@session_user.nil? or @session_user.can_scrape?)
+                %div.container.notification.error
+                    %p
+                        Last update failed with status code 
+                        %code= user.last_status_code
+                        %br
+                        Check your login informations
+            
+            - if not @session_user.nil?
+                - @session_user.each_pending_notification(:destroy => true) do |notification| 
+                    %div.container.notification{:class => notification.type}
+                        %p= notification.message
+            
+            = yield
+            
+            .footer
+                %a{:href => "http://cl.ly/161Y460U3K433s1j151C"} README

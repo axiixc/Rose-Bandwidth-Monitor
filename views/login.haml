@@ -1,0 +1,14 @@
+.container
+    %h1 Login
+    .content
+        %form{:action => url('/login'), :method => :post}
+            %label.primary{:key => :username}
+                Username
+                %input{:type => :text, :id => :username, :name => :username}
+            %label.secondary{:key => :password}
+                Password
+                %input{:type => :password, :id => :password, :name => :password}
+            %input{:type => :submit, :value => "Login"}
+                %span.form_appendage
+                    or
+                    %a{:href => url('/register')} register

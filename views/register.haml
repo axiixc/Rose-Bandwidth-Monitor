@@ -1,0 +1,22 @@
+.container
+    %h1 Notice
+    .content
+        %p.primary This must be your rose/kerberos login information. You'll be able to change your password after registration, but not your username.
+        %p.secondary NOTE: Your password will be stored in plain text in a database for authentication with Rose's servers.
+        %p.primary It will only be transferred over SSL
+        %p.secondary You will need boxcar for push notifications
+        %p
+            For more info see the temporary 
+            %a{:href => "http://cl.ly/161Y460U3K433s1j151C"} README
+
+.container
+    %h1 Register
+    .content
+        %form{:action => url('/register'), :method => :post}
+            %label.primary{:key => :username}
+                Username
+                %input{:type => :text, :id => :username, :name => :username}
+            %label.secondary{:key => :password}
+                Password
+                %input{:type => :password, :id => :password, :name => :password}
+            %input{:type => :submit, :value => "Register"}
