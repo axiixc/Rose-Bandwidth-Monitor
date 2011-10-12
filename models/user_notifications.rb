@@ -32,7 +32,7 @@ module Rose
          
          # Send notifications when bandwidth class changes
          elsif bandwidth_entry[0].bandwidth_class != self.notification_last_bandwidth_class_value
-            message = "Bandwidth class is now #{bandwidth_entry[0].bandwidth_class_string}"
+            message = "Bandwidth class is now #{bandwidth_entry[0].bandwidth_class_string}, usage at #{bandwidth_entry[0].policy_received_string}"
             self.notification_last_bandwidth_class_value = bandwidth_entry[0].bandwidth_class
             self.save
          end
