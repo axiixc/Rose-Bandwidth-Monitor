@@ -15,6 +15,7 @@ By default the scrape server will start in development mode, to put it into prod
 # Installation
 
 The following gems are required to run RBM
+
 - sinatra
 - datamapper
 - haml
