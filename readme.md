@@ -16,13 +16,13 @@ By default the scrape server will start in development mode, to put it into prod
 
 The following gems are required to run RBM
 
-- sinatra
-- datamapper
-- haml
-- ruby-ntlm
-- nokogiri
-- json
-- boxcar_api (httparty)
+- [sinatra](http://www.sinatrarb.com/)
+- [datamapper](http://datamapper.org/)
+- [haml](http://haml-lang.com/)
+- [ruby-ntlm](https://github.com/macks/ruby-ntlm)
+- [nokogiri](http://nokogiri.org/)
+- [json](http://flori.github.com/json/)
+- [boxcar_api](http://github.com/boxcar/boxcar_api)
 
 # TODO
 
