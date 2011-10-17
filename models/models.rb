@@ -6,11 +6,12 @@ module Rose
       DataMapper::Logger.new($stdout, :debug) if verbose
       
       database_location = use_production ? 'stats.sqlite' : 'development-stats.sqlite'
-      DataMapper.setup(:default, 'sqlite3://' + File.join(Dir.pwd, database_location))
+      datamapper_location = 'sqlite3://' + File.join(Dir.pwd, database_location)
+      DataMapper.setup(:default, datamapper_location)
       
-      # DataMapper::Model.raise_on_save_failure = true
+      puts "Initializing Datamapper: #{database_location}" if verbose
+      
       DataMapper.finalize
-      # DataMapper.auto_migrate!
       DataMapper.auto_upgrade!
    end
    

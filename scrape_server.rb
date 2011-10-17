@@ -1,4 +1,4 @@
-Dir['models/*'].each { |obj| require obj }
+Dir['models/*'].each { |model| require './' + model }
 
 Rose.setup_datamapper ARGV.include? '--production'
 Sleep_interval = 30

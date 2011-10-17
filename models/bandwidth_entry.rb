@@ -1,4 +1,4 @@
-require 'value_formatting'
+require './value_formatting.rb'
 
 module Rose
    module BandwidthEntry

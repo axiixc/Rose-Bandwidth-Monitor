@@ -19,7 +19,7 @@ The following gems are required to run RBM
 - sinatra
 - datamapper
 - haml
-- datamapper
+- ruby-ntlm
 - nokogiri
 - json
 - boxcar_api (httparty)

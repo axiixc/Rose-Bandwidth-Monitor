@@ -3,11 +3,13 @@ require 'sinatra'
 require 'data_mapper'
 require 'haml'
 require 'date'
+require 'json'
 
-Dir['models/*'].each { |model| require model }
-Dir['routes/*'].each { |route| require route }
 
-require 'config'
+Dir['models/*'].each { |model| require './' + model }
+Dir['routes/*'].each { |route| require './' + route }
+
+require './config'
 
 helpers do
    def login_user(user = nil)
