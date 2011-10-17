@@ -30,6 +30,8 @@ The following gems are required to run RBM
 - Stats such as time until bandwidth cap reduces
 - API access for creating/retrieving bandwidth entries
 - Possibly merge scrape server and web server
+- Allow name changes on devices (override the Rose names)
+- Add support for more notification services
 
 # Security Concerns
 
