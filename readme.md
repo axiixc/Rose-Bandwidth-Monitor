@@ -26,6 +26,8 @@ The following gems are required to run RBM
 
 # TODO
 
+- Fix "No Data" exception for report generation
+- Fix API token not generating on account registration
 - Add support for normalized bandwidth charts (i.e., bytes downloaded over time)
 - Stats such as time until bandwidth cap reduces
 - API access for creating/retrieving bandwidth entries
