@@ -1,5 +1,10 @@
 module Rose
    class Device
+      def display_name
+         (not self.preferred_name.to_s.empty?) ? self.preferred_name : 
+         (not self.host.to_s.empty?) ? self.host : self.network_address
+      end
+      
       def add_bandwidth_entry(scrape_dict, main_entry)
          bandwidth_entry = BandwidthDeviceEntry.create(
             :device => self,
