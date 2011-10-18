@@ -8,6 +8,7 @@ require 'json'
 
 Dir['models/*'].each { |model| require './' + model }
 Dir['routes/*'].each { |route| require './' + route }
+Dir['notification_providers/*'].each { |provider| require './' + provider }
 
 require './config'
 
