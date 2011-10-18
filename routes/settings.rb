@@ -22,6 +22,17 @@ post '/settings/notifications/?' do
    redirect '/'
 end
 
+post '/settings/devices/?' do
+   params[:network_address].each_with_index do |network_address, index|
+      return if (device = @session_user.devices.first :network_address => network_address).nil?
+      name = params[:preferred_name][index]
+      device.preferred_name = name.to_s.empty? ? nil : name
+      device.save
+   end
+   
+   redirect '/'
+end
+
 post '/settings/password/?' do
    # Only update password if current is passed
    if not params[:current_password].empty?
