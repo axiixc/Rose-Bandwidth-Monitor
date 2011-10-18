@@ -57,7 +57,7 @@
                 - d_label_class = (d_label_polarity = !d_label_polarity) ? 'primary' : 'secondary'
                 %input{:type => :hidden, :name => 'network_address[]', :value => device.network_address}
                 %label{:class => d_label_class, :name => 'preferred_name[]'}
-                    %input{:type => :text, :name => 'preferred_name[]', :id => 'preferred_name[]', :value => device.preferred_name, :placeholder => device.host.empty? ? device.network_address : device.host}
+                    %input{:type => :text, :name => 'preferred_name[]', :id => 'preferred_name[]', :value => device.preferred_name, :placeholder => device.display_name}
                     - if device.host.empty?
                         %span{:style => "color: #999;"} Untitled Device
                     - else
