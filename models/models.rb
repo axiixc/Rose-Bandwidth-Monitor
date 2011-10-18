@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'data_mapper'
+require 'dm-types'
 
 module Rose
    def Rose.setup_datamapper(use_production = false, verbose = false)
@@ -34,6 +35,18 @@ module Rose
       has n, :bandwidth_entries, :model => 'BandwidthMainEntry'
       has n, :devices, :order => [ :network_address.desc ]
       has n, :pending_notifications, :model => 'Notification'
+      has n, :notification_providers, :model => 'UserNotificationProvider'
+   end
+   
+   class UserNotificationProvider
+      include DataMapper::Resource
+      
+      property :id, Serial
+      property :provider_id, String
+      property :active, Boolean, :default => true
+      property :configuration, Yaml
+      
+      belongs_to :user
    end
    
    class Device
@@ -44,6 +57,7 @@ module Rose
       property :id, Serial
       property :network_address, String
       property :host, String
+      property :preferred_name, String
 
       has n, :bandwidth_entries, :model => 'BandwidthDeviceEntry'
    end
