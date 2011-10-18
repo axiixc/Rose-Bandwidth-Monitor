@@ -182,6 +182,20 @@ div.success {
 	border-color: #004600;
 }
 
+div#chart_container {
+	padding: 10px 10px 0 10px;
+}
+
+div#chart_div {
+	height: 300px;
+}
+.loading {
+	text-align: center;
+	font-weight: bold;
+	font-size: 0.9em;
+	color: #999;
+}
+
 div.container h1 {
 	-webkit-border-top-left-radius: 7px;
 	-webkit-border-top-right-radius: 7px;
@@ -229,6 +243,56 @@ div.container h1 .capsule {
 	box-shadow: 0 1px 0 white;
 }
 
+h2 {
+	background: rgb(226,226,226);
+	background: -moz-linear-gradient(top, rgba(226,226,226,1) 0%, rgba(211,211,211,1) 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(226,226,226,1)), color-stop(100%,rgba(211,211,211,1)));
+	background: -webkit-linear-gradient(top, rgba(226,226,226,1) 0%,rgba(211,211,211,1) 100%);
+	background: -o-linear-gradient(top, rgba(226,226,226,1) 0%,rgba(211,211,211,1) 100%);
+	background: -ms-linear-gradient(top, rgba(226,226,226,1) 0%,rgba(211,211,211,1) 100%);
+	background: linear-gradient(top, rgba(226,226,226,1) 0%,rgba(211,211,211,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2e2e2', endColorstr='#d3d3d3',GradientType=0 );
+	
+	margin: 0;
+	padding: 10px;
+	border-bottom: 1px solid #9C9C9C;
+	font-size: 1.5em;
+	color: black;
+	text-shadow: 0 1px 0 white;
+}
+
+h2 {
+	border-top: 1px solid #9C9C9C;
+}
+
+/*
+.form_group {
+	-webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+	border-radius: 7px;
+	
+	margin: 10px 10px 0 10px;
+	border: 1px solid #9C9C9C;
+}
+
+.form_group h2 {
+	-webkit-border-top-left-radius: 7px;
+	-webkit-border-top-right-radius: 7px;
+	-moz-border-radius-topleft: 7px;
+	-moz-border-radius-topright: 7px;
+	border-top-left-radius: 7px;
+	border-top-right-radius: 7px;
+}
+
+.form_group *:last-child {
+	-webkit-border-bottom-right-radius: 7px;
+	-webkit-border-bottom-left-radius: 7px;
+	-moz-border-radius-bottomright: 7px;
+	-moz-border-radius-bottomleft: 7px;
+	border-bottom-right-radius: 7px;
+	border-bottom-left-radius: 7px;
+} */
+
 div.container p {
 	padding: 10px;
 	margin: 0;
@@ -259,6 +323,7 @@ font-weight: bold;
 
 label,
 .label {
+	vertical-align: middle;
 	padding: 10px;
 	font-size: 0.9em;
 	font-weight: bold;
@@ -289,14 +354,22 @@ input[type=button] {
 	text-shadow: 0 1px 0 white;
 }
 
+h2 input[type=button] {
+	margin: 2px 0 0 0;
+	float: right;
+	box-shadow: 0 1px 0 white;
+}
+
 input[type=text]:hover, input[type=text]:focus,
 input[type=password]:hover, input[type=password]:focus,
-input[type=submit]:hover, input[type=button]:hover {
+input[type=submit]:hover, input[type=button]:hover,
+h2 label.capsule:hover {
 	border-color: #717171;
 }
 
 input[type=submit]:active,
-input[type=button]:active {
+input[type=button]:active,
+h2 label.capsule:active {
 	background: rgb(204,204,204);
 	background: -moz-linear-gradient(top, rgba(204,204,204,1) 0%, rgba(238,238,238,1) 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(204,204,204,1)), color-stop(100%,rgba(238,238,238,1)));
@@ -360,6 +433,7 @@ label input[type=checkbox] {
 
 @media only screen and (max-width: 430px) {
 	div.nav h1 {
+		font-size: 0;
 		color: transparent;
 	}
 }

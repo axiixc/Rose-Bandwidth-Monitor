@@ -1,104 +1,96 @@
-.container
-    - report = Rose::Reports.basic(@session_user)
-    :javascript
-        // jQuery function, called when page load is complete
-        $(document).ready(function() {
-            // when the window is resized, redraw the graph to the new size
-            $(window).bind("resize", function(event) {
-                if ($('#chart_div').width() != $('#chart_div').children()[0].width) {
-                    drawChart();
-                }
-            });	
-            
-            $('#force_scrape').bind("click", function(event) {
-                $('#force_scrape').attr('disabled', 'disabled');
-                $('#force_scrape').attr('value', 'Hold on...');
-                $.ajax({
-                    type: "POST",
-                    url: "#{url('/force_scrape')}",
-                    success: function(msg) {
-                        location.reload();
-                    },
-                    error: function() {
-                        location.reload();
-                    }
-                });
-            });
-        });
-        
-        google.load("visualization", "1", {packages:["corechart"]});
-        google.setOnLoadCallback(drawChart);
-        function drawChart() {
-            var data = new google.visualization.DataTable();
-            data.addColumn('string', 'Timestamp');
-            data.addColumn('number', 'Total');
-            #{report[:devices].map{ |device| "data.addColumn('number', '#{device[:host].empty? ? device[:network_address] : device[:host]}');" }.join ' '}
-            data.addRows(#{ report[:rows].to_json });
-                
-            var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
-            chart.draw(data, {
-                height: 300, 
-                legend: 'bottom', 
-                areaOpacity: 1 / data.getNumberOfColumns(),
-                hAxis: {
-                    textPosition: 'none',
-                    direction: -1
-                }, 
-                vAxis: {
-                    minValue: 0,
-                    format: "#,### MB", 
-                    textPosition: 'in'
-                }, 
-                chartArea: {
-                    top: 0, 
-                    left: 0, 
-                    height: "85%", 
-                    width: "100%"
-                }
-            });
-        }
-    %h1
-        Usage
-        %span.capsule= "Past %.0f Hours" % [ report[:metadata][:time_difference] / 60 / 60 ]
-    .content#chart_container{:style => "padding: 3% 3% 0 3%;"}
-        #chart_div
+- report = Rose::Reports.basic(@session_user)
 
 .container
     %h1
-        Notifications
-        %span.capsule{:style => "color: #{@session_user.notification_enabled ? 'green' : '#800000'};"}= @session_user.notification_enabled ? 'Enabled' : 'Disabled'
+        Usage
+        %span.capsule= "Past %.0f Hours" % [ report[:metadata][:time_difference] / 60 / 60 ]
+    .content#chart_container
+        #chart_div
+            %table{:style => "width: 100%; height: 100%;"}
+                %tr
+                    %td.loading{:valign => :middle} Loading Chart Data...
+
+.container
+    %h1 Notifications
     .content
         %form{:action => url("/settings/notifications"), :method => :post}
-            %label.primary{:key => :email}
-                Boxcar Email
-                %input{:type => :text, :id => :email, :name => :email, :value => @session_user.notification_boxcar_email}
-            %label.secondary{:key => :warn_level}
-                Warn Level (in MB)
+            %label.primary{:key => :warn_level}
+                Warn Level (MB)
                 %input{:type => :text, :id => :warn_level, :name => :warn_level, :value => '%.0f' % @session_user.notification_warn_level}
-            %input{:type => :submit, :value => @session_user.notification_enabled ? "Update" : "Update and Enabled Notifications"}
-                - if @session_user.notification_enabled
-                    %span.form_appendage
-                        or
-                        %input{:type => :submit, :name => :disable_notifications, :value => 'disable notifications'}
+            - Rose::User.notification_providers.each_with_index do |provider_id, index|
+            - provider_name = Rose::User.notification_provider_name_with_id(provider_id)
+            - provider = @session_user.notification_providers.first(:provider_id => provider_id)
+            - provider_active = !provider.nil? and provider.active
+                .form_group
+                    %input{:type => :hidden, :name => "#{index}__provider_name", :value => provider_name}
+                    %input{:type => :hidden, :name => "#{index}active", :value => provider_active ? :true : :false}
+                    %h2
+                        = provider_name
+                        %input{:type => :button, :value => provider_active ? "Disable" : "Enable", :id => "toggle_notification_provider_enabled"}
+                    - o_label_polarity = false
+                    - Rose::User.notification_provider_class_with_id(provider_id).configuration_options.each do |opt|
+                        - o_label_class = (o_label_polarity = !o_label_polarity) ? 'primary' : 'secondary'
+                        - o_name = "#{index}#{opt[:name]}"
+                        %label{:class => o_label_class, :name => o_name}
+                            - case opt[:type]
+                            - when :text, :password
+                                = opt[:label]
+                                %input{:type => opt[:type], :id => o_name, :name => o_name, :value => provider.nil? ? "" : provider.configuration[opt[:name]]}
+                            - when :checkbox
+                                - checked = provider.nil? ? (opt[:default].nil? ? false : opt[:default]) : provider.configuration[opt[:name]]
+                                %input{:type => :checkbox, :id => o_name, :name => o_name, :value => opt[:name], :checked => checked}
+                                = opt[:label]
+            %input{:type => :submit, :value => "Update Notifications"}
+            %span.form_appendage
+                or
+                %input{:type => :submit, :name => :disable_notifications, :value => "disable them"}
+
+- devices = @session_user.devices
+.container
+    %h1
+        Devices
+        %span.capsule= devices.size == 0 ? "No Devices" : "#{devices.size} Devices"
+    .content
+        %form{:action => url("/settings/devices"), :method => :post}
+            - d_label_polarity = false
+            - devices.each do |device|
+                - d_label_class = (d_label_polarity = !d_label_polarity) ? 'primary' : 'secondary'
+                %input{:type => :hidden, :name => 'network_address[]', :value => device.network_address}
+                %label{:class => d_label_class, :name => 'preferred_name[]'}
+                    %input{:type => :text, :name => 'preferred_name[]', :id => 'preferred_name[]', :value => device.preferred_name, :placeholder => device.host.empty? ? device.network_address : device.host}
+                    - if device.host.empty?
+                        %span{:style => "color: #999;"} Untitled Device
+                    - else
+                        = device.host
+                    %br
+                    %code= device.network_address
+            %input{:type => :submit, :value => "Update Devices"}
+            %span.form_appendage
+                or
+                %input{:type => :submit, :name => :clear_custom_titles, :value => "clear custom titles"}
+
 .container
     %h1 Account
     .content
         %form{:action => url("/settings/profile"), :method => :post}
+            - url = url("/profile/#{@session_user.protected_stats_token}")
             %label.primary{:key => :public_stats}
                 %input{:type => :checkbox, :name => :public_stats, :value => :public_stats, :checked => @session_user.public_stats, :id => :public_stats}
-                Public bandwidth stats
+                Allow others to view my bandwidth usage (
+                %a{:href => url('/profile/' + @session_user.username)}> preview
+                )
             %label.secondary
                 Bandwidth stats token:
                 %code{:style => 'word-wrap: break-word;'}= @session_user.protected_stats_token
             %p.primary
-                You can access your bandwidth stats without having to log in by visiting the url
-                - url = url("/profile/#{@session_user.protected_stats_token}")
+                For quick access to your bandwidth usage without logging in, bookmark this link
                 %a{:href => url, :style => 'word-wrap: break-word;'}= url
                 
-            %input{:type => :submit, :value => "Update"}
+            %input{:type => :submit, :value => "Update Account"}
             %span.form_appendage
                 or
                 %input{:type => :submit, :name => :reset_protected_stats_token, :value => "reset bandwidth token"}
+
 .container
     %h1 Password
     .content
@@ -112,7 +104,7 @@
             %label.primary{:key => :new_password_confirm}
                 Confirm Password
                 %input{:type => :password, :id => :new_password_confirm, :name => :new_password_confirm}
-            %input{:type => :submit, :value => "Update"}
+            %input{:type => :submit, :value => "Update Password"}
             
 .container
     %h1
@@ -144,3 +136,78 @@
                 %tr
                     %td.c No Data
         %input#force_scrape{:type => :button, :value => "Force Scrape"}
+
+:javascript
+    // jQuery function, called when page load is complete
+    $(document).ready(function() {
+        // when the window is resized, redraw the graph to the new size
+        $(window).bind("resize", function(event) {
+            if ($('#chart_div').width() != $('#chart_div').children()[0].width) {
+                drawChart();
+            }
+        });	
+
+        $('#force_scrape').bind("click", function(event) {
+            $('#force_scrape').attr('disabled', 'disabled');
+            $('#force_scrape').attr('value', 'Forcing Scrape, Hold on...');
+            $.ajax({
+                type: "POST",
+                url: "#{url('/force_scrape')}",
+                success: function(msg) {
+                    location.reload();
+                },
+                error: function() {
+                    location.reload();
+                }
+            });
+        });
+
+        e = $('input[id=toggle_notification_provider_enabled]');
+        for (i = 0; i < e.length; i++) {
+            m = e[i];
+            console.log(m);
+            m.bind("click", function(event) {
+                console.log("TEST");
+                // $('div[class=form_group]')[i].slideToggle(500);
+            });
+        }
+
+        $.each($('input[id=toggle_notification_provider_enabled]'), function(index, element) {
+            console.log(element);
+            element.bind("click", function(event) {
+                console.log("TEST");
+                // $('div[class=form_group]')[index].slideToggle(500);
+            });
+        });
+    });
+
+    google.load("visualization", "1", {packages:["corechart"]});
+    google.setOnLoadCallback(drawChart);
+    function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Timestamp');
+        data.addColumn('number', 'Total');
+        #{report[:devices].map{ |device| "data.addColumn('number', '#{device[:display_name]}');" }.join ' '}
+        data.addRows(#{ report[:rows].to_json });
+
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+        chart.draw(data, {
+            legend: 'bottom', 
+            areaOpacity: 1 / data.getNumberOfColumns(),
+            hAxis: {
+                textPosition: 'none',
+                direction: -1
+            }, 
+            vAxis: {
+                minValue: 0,
+                format: "#,### MB", 
+                textPosition: 'in'
+            }, 
+            chartArea: {
+                top: 0, 
+                left: 0, 
+                height: "85%", 
+                width: "100%"
+            }
+        });
+    }
