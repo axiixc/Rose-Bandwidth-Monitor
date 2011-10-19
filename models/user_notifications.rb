@@ -5,14 +5,11 @@ module Rose
          @@notification_providers_array = []
          @@notification_providers_hash = {}
          
-         def register_notification_provider(provider_name, provider_id)
+         def register_notification_provider(provider_name, provider_id, provider_class)
             @@notification_providers_array << provider_id
             @@notification_providers_hash[provider_id] = {
                :name => provider_name,
-               :class => Class.new do
-                  include UserNotificationProviderDelegate
-                  yield self
-               end
+               :class => provider_class
             }
          end
          
@@ -32,10 +29,12 @@ module Rose
       end
       
       def check_and_notify
-         return if (not self.notification_enabled) or self.notification_providers.empty?
-         
+         p "A"
+         return if self.notification_providers.all(:enabled => true).empty?
+         p "B"
          bandwidth_entry = self.bandwidth_entries.all :order => [ :timestamp.desc ], :limit => 2
          return if bandwidth_entry.size < 1
+         p "C"
 
          # If unrestricted, check for a warn notification
          if bandwidth_entry[0].bandwidth_class == 0.0 &&

@@ -9,9 +9,10 @@ module Rose
          @delegate
       end
       
-      def active=(active)
-         super active
-         delegate.call(active ? :subscribe : :unsubscribe)
+      def enabled=(enabled)
+         call_delegate = enabled ^ self.enabled
+         super enabled
+         delegate.send(enabled ? :subscribe : :unsubscribe) if call_delegate
       end
       
       def notify(message)

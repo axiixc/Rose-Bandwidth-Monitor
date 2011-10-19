@@ -4,7 +4,6 @@ post '/settings/notifications/?' do
    else
       warn_level = params[:warn_level].to_f
       @session_user.update(:notification_warn_level => warn_level) unless warn_level <= 0.0
-      @session_user.notification_providers.each { |pr| p pr }
       
       params[:provider_id].each do |index, provider_id|
          provider = @session_user.notification_providers.first :provider_id => provider_id

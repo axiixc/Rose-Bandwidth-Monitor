@@ -3,7 +3,7 @@ configure :production do
 end
 
 configure :development do
-   Rose.setup_datamapper false, true
+   Rose.setup_datamapper false
 end
 
 configure do
