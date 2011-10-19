@@ -1,4 +1,4 @@
-- report = Rose::Reports.basic(@session_user)
+- report = Rose::Reports.basic(@profile_user)
 
 .container
     %h1
@@ -18,21 +18,6 @@
             if ($('#chart_div').width() != $('#chart_div').children()[0].width) {
                 drawChart();
             }
-        });	
-
-        $('#force_scrape').bind("click", function(event) {
-            $('#force_scrape').attr('disabled', 'disabled');
-            $('#force_scrape').attr('value', 'Forcing Scrape, Hold on...');
-            $.ajax({
-                type: "POST",
-                url: "#{url('/force_scrape')}",
-                success: function(msg) {
-                    location.reload();
-                },
-                error: function() {
-                    location.reload();
-                }
-            });
         });
     });
 
