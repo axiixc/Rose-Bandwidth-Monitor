@@ -1,9 +1,35 @@
 post '/settings/notifications/?' do
+   if params[:disable_notifications]
+      @session_user.notification_providers.each { |provider| provider.update :enabled => false }
+   else
+      warn_level = params[:warn_level].to_f
+      @session_user.update(:notification_warn_level => warn_level) unless warn_level <= 0.0
+      @session_user.notification_providers.each { |pr| p pr }
+      
+      params[:provider_id].each do |index, provider_id|
+         provider = @session_user.notification_providers.first :provider_id => provider_id
+         provider_enabled = !params[:enabled][index].to_s.empty?
+         
+         next if provider.nil? && !provider_enabled
+         
+         provider = Rose::UserNotificationProvider.create :user => @session_user, :provider_id => provider_id if provider.nil?
+         provider.enabled = provider_enabled
+         
+         provider.user_configuration = {}
+         provider.delegate.configuration_options.each { |opt| provider.user_configuration[opt[:name]] = params[opt[:name]].nil? ? nil : params[opt[:name]][index] }
+         provider.save
+      end
+   end
+   
+   redirect '/'
+end
+
+post '/settings/notifications--old/?' do
    if not params[:disable_notifications].nil?
       @session_user.notification_enabled = false
    else
       # If the email has changed, resubmit for subscription
-      if @session_user.notification_enabled and params[:email].nil?
+      if @session_user.notification_enabled && params[:email].nil?
          @session_user.add_notification "Notifications disabled. Please enter a boxcar email address.", :warning
       elsif @session_user.notification_boxcar_email.nil? or not (params[:email].nil? or @session_user.notification_boxcar_email == params[:email])
          fork { @session_user.subscribe! }

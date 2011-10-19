@@ -1,24 +1,21 @@
 module Rose
    class UserNotificationProvider
-      def provider_delegate
-         if @provider_delegate.nil?
+      def delegate
+         if @delegate.nil?
             provider_class = User::notification_provider_class_with_id(self.provider_id)
-            @provider_delegate = provider_class.new(self.user, self) unless provider_class.nil?
+            @delegate = provider_class.new(self.user, self) unless provider_class.nil?
          end
          
-         @provider_delegate
+         @delegate
       end
       
-      def subscribe
-         provider_delegate.subscribe
-      end
-      
-      def unsubscribe
-         provider_delegate.unsubscribe
+      def active=(active)
+         super active
+         delegate.call(active ? :subscribe : :unsubscribe)
       end
       
       def notify(message)
-         provider_delegate.notify message
+         delegate.notify message
       end
    end
    
@@ -38,13 +35,17 @@ module Rose
          @provider = provider
       end
       
+      def configuration_options
+         self.class.configuration_options
+      end
+      
       def subscribe
       end
       
       def unsubscribe
       end
       
-      def notify
+      def notify(message)
       end
    end
 end

@@ -289,6 +289,9 @@ font-weight: bold;
 
 .primary { background: #FCFCFC; border-bottom: 1px solid #DBDBDB; }
 .secondary { background: #F4F4F4; border-bottom: 1px solid #DBDBDB; }
+.c_red { color: #800000; }
+.c_orange { color: #FF8000; }
+.c_green { color: #008000; }
 
 label,
 .label {
@@ -386,6 +389,10 @@ label input[type=checkbox] {
 	text-decoration: underline;
 	padding: 0;
 	margin: 0;
+}
+
+.notification_toggle {
+	width: 90px;
 }
 
 @media only screen and (max-width: 530px) {

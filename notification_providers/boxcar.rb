@@ -16,10 +16,10 @@ Rose::User::register_notification_provider("Boxcar", "com.axiixc.rbm.boxcar") do
    end
    
    def subscribe
-      notification_provider.subscribe self.configuration[:email]
+      notification_provider.subscribe self.user_configuration[:email]
    end
    
    def notify(message)
-      notification_provider.notify self.configuration[:email], message
+      notification_provider.notify self.user_configuration[:email], message
    end
 end

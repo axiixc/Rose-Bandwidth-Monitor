@@ -43,8 +43,9 @@ module Rose
       
       property :id, Serial
       property :provider_id, String
-      property :active, Boolean, :default => true
-      property :configuration, Yaml
+      property :enabled, Boolean, :default => true
+      property :user_configuration, Yaml
+      property :provider_configuration, Yaml
       
       belongs_to :user
    end

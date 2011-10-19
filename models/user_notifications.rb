@@ -37,11 +37,9 @@ module Rose
          bandwidth_entry = self.bandwidth_entries.all :order => [ :timestamp.desc ], :limit => 2
          return if bandwidth_entry.size < 1
 
-         message = nil
-
          # If unrestricted, check for a warn notification
-         if bandwidth_entry[0].bandwidth_class == 0.0 and 
-               ((not bandwidth_entry[1].nil? and bandwidth_entry[1].policy_mbytes_received < self.notification_warn_level) and
+         if bandwidth_entry[0].bandwidth_class == 0.0 &&
+               ((not bandwidth_entry[1].nil? && bandwidth_entry[1].policy_mbytes_received < self.notification_warn_level) &&
                bandwidth_entry[0].policy_mbytes_received >= self.notification_warn_level)
             message = "Bandwidth usage at #{bandwidth_entry[0].policy_received_string}"
 
@@ -53,7 +51,7 @@ module Rose
          end
 
          return if message.nil?
-         self.notification_providers.each { |provider| provider.notify message }
+         self.notification_providers.all(:enabled => true).each { |provider| provider.notify message }
          puts "Notify #{self.username}: #{message}"
       end
    end

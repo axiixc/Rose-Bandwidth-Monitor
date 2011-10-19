@@ -49,11 +49,11 @@ end
 
 before do
    # If the user is not logged in only allow access to unprotected paths
-   if password_doesnt_match_user?(params[:username], params[:pwhash]) and (not unprotected_user_path?)
+   if password_doesnt_match_user?(params[:username], params[:pwhash]) && (not unprotected_user_path?)
       redirect '/login'
       
    # If the user is logged in don't let them see the register and login paths
-   elsif not password_doesnt_match_user? and exclusive_user_path?
+   elsif !password_doesnt_match_user? && exclusive_user_path?
       redirect '/'
       
    end

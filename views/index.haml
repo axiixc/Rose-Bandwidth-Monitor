@@ -1,9 +1,30 @@
 - report = Rose::Reports.basic(@session_user)
+- text_enabled = 'Enabled'
+- text_disabled = 'Disabled'
+
+:javascript
+    function toggleNotifications(index) {
+        enabled = $("input[name='enabled[" + index + "]']");
+        enabled_b = (enabled.val() == '');
+        enabled.val(enabled_b ? 'true' : '');
+        
+        toggle = $("input[name='toggle_notifications[" + index + "]']");
+        toggle.val(enabled_b ? '#{text_enabled}' : '#{text_disabled}');
+        
+        if (!enabled_b) {
+            toggle.removeClass('c_green');
+            toggle.addClass('c_red');
+        }
+        else {
+            toggle.addClass('c_green');
+            toggle.removeClass('c_red');
+        }
+    }
 
 .container
     %h1
         Usage
-        %span.capsule= "Past %.0f Hours" % [ report[:metadata][:time_difference] / 60 / 60 ]
+        %span.capsule= report[:metadata][:time_difference].nil? ? "No Data" : "Past %.0f Hours" % [ report[:metadata][:time_difference] / 60 / 60 ]
     .content#chart_container
         #chart_div
             %table{:style => "width: 100%; height: 100%;"}
@@ -17,27 +38,27 @@
             %label.primary{:key => :warn_level}
                 Warn Level (MB)
                 %input{:type => :text, :id => :warn_level, :name => :warn_level, :value => '%.0f' % @session_user.notification_warn_level}
-            - Rose::User.notification_providers.each_with_index do |provider_id, index|
+            - Rose::User.notification_providers.each_with_index do |provider_id, provider_index|
             - provider_name = Rose::User.notification_provider_name_with_id(provider_id)
             - provider = @session_user.notification_providers.first(:provider_id => provider_id)
-            - provider_active = !provider.nil? and provider.active
+            - provider_enabled = !provider.nil? && provider.enabled
                 .form_group
-                    %input{:type => :hidden, :name => "#{index}__provider_name", :value => provider_name}
-                    %input{:type => :hidden, :name => "#{index}active", :value => provider_active ? :true : :false}
+                    %input{:type => :hidden, :name => "provider_id[#{provider_index}]", :value => provider_id}
+                    %input{:type => :hidden, :name => "enabled[#{provider_index}]", :value => provider_enabled ? :true : ''}
                     %h2
                         = provider_name
-                        %input{:type => :button, :value => provider_active ? "Disable" : "Enable", :id => "toggle_notification_provider_enabled"}
+                        %input.notification_toggle{:type => :button, :class => provider_enabled ? :c_green : :c_red, :value => provider_enabled ? text_enabled : text_disabled, :name => "toggle_notifications[#{provider_index}]", :onclick => "toggleNotifications(#{provider_index});", :title => "Toggle this notification service enabled or disabled"}
                     - o_label_polarity = false
                     - Rose::User.notification_provider_class_with_id(provider_id).configuration_options.each do |opt|
                         - o_label_class = (o_label_polarity = !o_label_polarity) ? 'primary' : 'secondary'
-                        - o_name = "#{index}#{opt[:name]}"
+                        - o_name = "#{opt[:name]}[#{provider_index}]"
                         %label{:class => o_label_class, :name => o_name}
                             - case opt[:type]
                             - when :text, :password
                                 = opt[:label]
-                                %input{:type => opt[:type], :id => o_name, :name => o_name, :value => provider.nil? ? "" : provider.configuration[opt[:name]]}
+                                %input{:type => opt[:type], :id => o_name, :name => o_name, :value => provider.nil? ? "" : provider.user_configuration[opt[:name]]}
                             - when :checkbox
-                                - checked = provider.nil? ? (opt[:default].nil? ? false : opt[:default]) : provider.configuration[opt[:name]]
+                                - checked = provider.nil? ? (opt[:default].nil? ? false : opt[:default]) : provider.user_configuration[opt[:name]]
                                 %input{:type => :checkbox, :id => o_name, :name => o_name, :value => opt[:name], :checked => checked}
                                 = opt[:label]
             %input{:type => :submit, :value => "Update Notifications"}
@@ -146,7 +167,7 @@
                 drawChart();
             }
         });	
-
+        
         $('#force_scrape').bind("click", function(event) {
             $('#force_scrape').attr('disabled', 'disabled');
             $('#force_scrape').attr('value', 'Forcing Scrape, Hold on...');
@@ -159,24 +180,6 @@
                 error: function() {
                     location.reload();
                 }
-            });
-        });
-
-        e = $('input[id=toggle_notification_provider_enabled]');
-        for (i = 0; i < e.length; i++) {
-            m = e[i];
-            console.log(m);
-            m.bind("click", function(event) {
-                console.log("TEST");
-                // $('div[class=form_group]')[i].slideToggle(500);
-            });
-        }
-
-        $.each($('input[id=toggle_notification_provider_enabled]'), function(index, element) {
-            console.log(element);
-            element.bind("click", function(event) {
-                console.log("TEST");
-                // $('div[class=form_group]')[index].slideToggle(500);
             });
         });
     });

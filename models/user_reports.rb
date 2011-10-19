@@ -21,7 +21,7 @@ module Rose
          
          rows = []
          entries = user.bandwidth_entries.all(:timestamp.gte => Time.now - Window_length, :order => [ :timestamp.desc ])
-         return { :devices => [], :rows => [], :metadata => [] } if (entries.size == 0)
+         return { :devices => [], :rows => [], :metadata => {} } if (entries.size == 0)
          
          entries.each do |main_entry|
             yield(rows, row_length, device_mappings, main_entry)
