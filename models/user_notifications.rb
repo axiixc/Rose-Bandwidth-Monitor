@@ -29,12 +29,10 @@ module Rose
       end
       
       def check_and_notify
-         p "A"
          return if self.notification_providers.all(:enabled => true).empty?
-         p "B"
+         
          bandwidth_entry = self.bandwidth_entries.all :order => [ :timestamp.desc ], :limit => 2
          return if bandwidth_entry.size < 1
-         p "C"
 
          # If unrestricted, check for a warn notification
          if bandwidth_entry[0].bandwidth_class == 0.0 &&
