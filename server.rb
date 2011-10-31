@@ -5,10 +5,10 @@ require 'haml'
 require 'date'
 require 'json'
 
-
 Dir['models/*'].each { |model| require './' + model }
 Dir['routes/*'].each { |route| require './' + route }
 Dir['notification_providers/*'].each { |provider| require './' + provider }
+require './date_time_compat'
 
 require './config'
 

@@ -26,20 +26,18 @@ module Rose
    module Reports
       Window_length = 36 * 60 * 60
       
-      def Reports.datetime_to_time(dest)
-         usec = (dest.sec_fraction * 60 * 60 * 24 * (10**6)).to_i
-         Time.send(:gm, dest.year, dest.month, dest.day, dest.hour, dest.min, dest.sec, usec)
-      end
-      
       def Reports.iterate_over_user(user)
-         row_length = 2
+         row_length = 1
          device_mappings = {}
          devices = []
          
          user.devices.each do |device| 
+            p device
             device_mappings[device.id] = (row_length += 1)
             devices << { :network_address => device.network_address, :host => device.host, :display_name => device.display_name, :index => row_length }
          end
+         
+         row_length += 1
          
          rows = []
          entries = user.bandwidth_entries.all(:timestamp.gte => Time.now - Window_length, :order => [ :timestamp.desc ])
@@ -49,8 +47,8 @@ module Rose
             yield(rows, row_length, device_mappings, main_entry)
          end
          
-         newest_time = datetime_to_time(entries[0].timestamp)
-         oldest_time = datetime_to_time(entries[entries.size - 1].timestamp)
+         newest_time = DateTime.datetime_to_time(entries[0].timestamp)
+         oldest_time = DateTime.datetime_to_time(entries[entries.size - 1].timestamp)
          
          { 
             :devices => devices, 

@@ -16,6 +16,10 @@ module Rose
          self.protected_stats_token = Digest::SHA1.hexdigest self.pwhash + Time.now.to_s
       end
       
+      def current_usage
+         self.bandwidth_entries.first :order => [ :timestamp.desc ]
+      end
+      
       def each_pending_notification(options = {:destroy => false})
          self.pending_notifications.each do |notification|
             yield notification

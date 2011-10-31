@@ -118,35 +118,4 @@
             %label.primary{:key => :new_password_confirm}
                 Confirm Password
                 %input{:type => :password, :id => :new_password_confirm, :name => :new_password_confirm}
-            %input{:type => :submit, :value => "Update Password"}
-            
-.container
-    %h1
-        Bandwidth
-        %span.capsule= "#{@session_user.bandwidth_entries.count} Entries"
-    .content
-        %table.primary{:style => "width: 100%;"}
-            - entry = @session_user.bandwidth_entries.first(:order => [ :timestamp.desc ])
-            - if not entry.nil?
-                %tr
-                    %td.b Bandwidth Class
-                    %td= entry.bandwidth_class_string.capitalize
-                %tr
-                    %td.b Policy Received
-                    %td= entry.policy_received_string
-                %tr
-                    %td.b Policy Sent
-                    %td= entry.policy_sent_string
-                %tr
-                    %td.b Actual Received
-                    %td= entry.actual_received_string
-                %tr
-                    %td.b Actual Sent
-                    %td= entry.actual_sent_string
-                %tr
-                    %td.b Timestamp
-                    %td= entry.timestamp.strftime "%a %b %e at %l:%M.%S %P"
-            - else
-                %tr
-                    %td.c No Data
-        %input#force_scrape{:type => :button, :value => "Force Scrape"}
+            %input{:type => :submit, :value => "Update Password"}   

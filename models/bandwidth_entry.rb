@@ -30,6 +30,10 @@ module Rose
       def actual_sent_string
          Rose.string_from_mbytes self.actual_mbytes_sent
       end
+      
+      def data_age
+         DateTime.humanize_pretty Time.new - DateTime.datetime_to_time(self.timestamp)
+      end
    end
 
    class BandwidthMainEntry

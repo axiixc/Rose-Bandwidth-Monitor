@@ -189,6 +189,7 @@ div#chart_container {
 div#chart_div {
 	height: 300px;
 }
+
 .loading {
 	text-align: center;
 	font-weight: bold;
@@ -268,25 +269,6 @@ div.container p {
 	font-size: 0.9em;
 }
 
-td {
-	padding: 5px;
-}
-
-td.b {
-	width: 50%;
-	padding: 10px;
-	font-size: 0.9em;
-	font-weight: bold;
-	text-align: right;
-}
-
-td.c {
-padding: 10px;
-font-size: 0.9em;
-font-weight: bold;
-	text-align: center;
-}
-
 .primary { background: #FCFCFC; border-bottom: 1px solid #DBDBDB; }
 .secondary { background: #F4F4F4; border-bottom: 1px solid #DBDBDB; }
 .c_red { color: #800000; }
@@ -350,6 +332,10 @@ h2 label.capsule:active {
 	background: -ms-linear-gradient(top, rgba(204,204,204,1) 0%,rgba(238,238,238,1) 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cccccc', endColorstr='#eeeeee',GradientType=0 );
 	background: linear-gradient(top, rgba(204,204,204,1) 0%,rgba(238,238,238,1) 100%);
+}
+
+label .label_appendage {
+	float: right;
 }
 
 label input[type=text],
