@@ -45,7 +45,7 @@ module Rose
       property :provider_id, String
       property :enabled, Boolean, :default => true
       property :user_configuration, Yaml
-      property :provider_configuration, Yaml
+      property :provider_configuration, Yaml, :default => {}
       
       belongs_to :user
    end

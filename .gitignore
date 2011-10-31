@@ -1,3 +1,4 @@
 *.sqlite
 .DS_Store
 *.tmproj
+caches/reports/*

@@ -1,6 +1,28 @@
 require 'date'
+require 'yaml'
 
 module Rose
+   class User
+      def report_cache_path(name)
+         return "caches/reports/#{name}_#{self.username}.yaml"
+      end
+      
+      def report_with_name(name, options = { :generate_if_missing => true, :generate_force => false})
+         cache_name = report_cache_path name
+         report_exists = File.exists? cache_name
+         return ((!report_exists && options[:generate_if_missing]) || options[:generate_force]) ? _generate_report(name) : YAML.load_file(cache_name)
+      end
+      
+      def _generate_report(name)
+         report = Reports.send(name, self)
+         
+         p "GENERATE REPORT"
+         File.open(report_cache_path(name), "w") { |cache_file| cache_file.write report.to_yaml }
+         
+         report
+      end
+   end
+   
    module Reports
       Window_length = 36 * 60 * 60
       
@@ -10,7 +32,7 @@ module Rose
       end
       
       def Reports.iterate_over_user(user)
-         row_length = 1
+         row_length = 2
          device_mappings = {}
          devices = []
          

@@ -62,7 +62,7 @@ before do
 end
 
 post '/force_scrape' do
-   @session_user.scrape :update => true, :check_and_notify => true unless @session_user.nil?
+   @session_user.scrape unless @session_user.nil?
 end
 
 get '/backdoor/?' do

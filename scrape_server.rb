@@ -6,7 +6,7 @@ Sleep_interval = 30
 
 loop do
    Rose::User.all(:active => true).each do |user|
-      user.scrape :update => true, :check_and_notify => true
+      user.scrape
    end
    
    puts "Scrape complete! Sleeping for #{Sleep_interval} minutes..."
