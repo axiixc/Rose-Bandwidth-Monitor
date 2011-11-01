@@ -1,6 +1,10 @@
 - report = @profile_user.report_with_name :basic
 - usage = @profile_user.current_usage
 
+- if @profile_user != @session_user
+    .container.notification.message
+        %p= "Viewing bandwidth stats for #{@profile_user.username}"
+
 .container
     %h1
         Usage

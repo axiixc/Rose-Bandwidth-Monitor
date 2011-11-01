@@ -177,6 +177,10 @@ div.error {
 	border-color: #500000;
 }
 
+div.message {
+	background-color: #333;
+}
+
 div.success {
 	background-color: #187A00;
 	border-color: #004600;
