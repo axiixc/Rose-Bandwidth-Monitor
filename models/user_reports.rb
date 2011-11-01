@@ -15,10 +15,7 @@ module Rose
       
       def _generate_report(name)
          report = Reports.send(name, self)
-         
-         p "GENERATE REPORT"
          File.open(report_cache_path(name), "w") { |cache_file| cache_file.write report.to_yaml }
-         
          report
       end
    end
@@ -32,7 +29,6 @@ module Rose
          devices = []
          
          user.devices.each do |device| 
-            p device
             device_mappings[device.id] = (row_length += 1)
             devices << { :network_address => device.network_address, :host => device.host, :display_name => device.display_name, :index => row_length }
          end
