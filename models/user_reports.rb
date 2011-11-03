@@ -28,7 +28,7 @@ module Rose
       CachePath = "caches/reports"
       
       def self.make_cache_path(query)
-         filename = (type == :all) ? "all_#{query.name}.yaml" : "single_#{query.attachment.username}_#{query.name}.yaml"
+         filename = (query.type == :all) ? "all_#{query.name}.yaml" : "single_#{query.attachment.username}_#{query.name}.yaml"
          return File.join CachePath, filename
       end
       
