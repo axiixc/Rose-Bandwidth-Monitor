@@ -1,6 +1,6 @@
 RBM scrapes the Rose bandwidth usage page and collections stats of a user's bandwidth usage. It currently uses this to send push notifications (via boxcar) when a user's bandwidth usage passes a certain point ("warn level") or when the bandwidth class of a users changes.
 
-It also displays the last 36 hours of entries as a graph, although work to make this a more useful and intuitive graph still needs to be done.
+It also displays the last 36 hours of entries as a graph, although work to make this a more useful and intuitive graph still needs to be done. Devices are named using either their host name or network addresses, or a user provided name which takes precedence over both.
 
 # Usage
 
@@ -24,16 +24,19 @@ The following gems are required to run RBM
 - [json](http://flori.github.com/json/)
 - [boxcar_api](http://github.com/boxcar/boxcar_api)
 
-# TODO
+# Future Work
 
-- Fix "No Data" exception for report generation
-- Fix API token not generating on account registration
-- Add support for normalized bandwidth charts (i.e., bytes downloaded over time)
-- Stats such as time until bandwidth cap reduces
-- API access for creating/retrieving bandwidth entries
-- Possibly merge scrape server and web server
-- Allow name changes on devices (override the Rose names)
-- Add support for more notification services
+## Normalized bandwidth charts (i.e., bytes downloaded over time)
+
+This feature is currently on hold since I can't seem to figure out a way to pull out individual upload/download statistcs from the data Rose provides.
+
+This will also include stats such as time until bandwidth cap is reduced.
+
+## API access for creating/retrieving bandwidth entries
+
+For 3RD party applications who need access to long term data for a user. RBM holds onto usage data forever, so an API to access this may be of use.
+
+Also an API for notification providers to discover and register a user (with their consent) would be useful.
 
 # Security Concerns
 
