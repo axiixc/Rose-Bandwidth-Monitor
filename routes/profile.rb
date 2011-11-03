@@ -5,11 +5,7 @@ get '/profile/:token' do |token|
       @profile_hide_notification = true
    end
    
-   if @profile_user.nil?
-      return "Invalid user profile"
-   else
-      haml :profile
-   end
+   haml :profile
 end
 
 get '/profile/?' do

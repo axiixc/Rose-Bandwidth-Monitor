@@ -1,69 +1,74 @@
-- report = @profile_user.report_with_name :basic
-- usage = @profile_user.current_usage
+- if @profile_user.nil?
+    .container.notification.error
+        %p Invalid Username or API Token
 
-- if @profile_user != @session_user && !@profile_hide_notification
-    .container.notification.message
-        %p= "Viewing bandwidth stats for #{@profile_user.username}"
+- else
+    - report = @profile_user.report_with_name :basic
+    - usage = @profile_user.current_usage
 
-.container
-    %h1
-        Usage
-        %span.capsule= usage.bandwidth_class_string.capitalize
-    .content
-        %label.primary
-            Policy
-            .label_appendage= "#{usage.policy_received_string} &uarr; / #{usage.policy_sent_string} &darr;"
-        %label.secondary
-            Actual
-            .label_appendage= "#{usage.actual_received_string} &uarr; / #{usage.actual_sent_string} &darr;"
-        #chart_container.primary
-            #chart_div
-                %table{:style => "width: 100%; height: 100%;"}
-                    %tr
-                        %td.loading{:valign => :middle} Loading Chart Data...
-        - if @profile_user == @session_user
-            %input#force_scrape{:type => :button, :value => "Update"}
-            %span.form_appendage= "last updated #{usage.data_age}"
-        - else
-            %label{:style => "text-align: center; color: #777"}= "updated #{usage.data_age}"
+    - if @profile_user != @session_user && !@profile_hide_notification
+        .container.notification.message
+            %p= "Viewing bandwidth stats for #{@profile_user.username}"
 
-:javascript
-    // jQuery function, called when page load is complete
-    $(document).ready(function() {
-        // when the window is resized, redraw the graph to the new size
-        $(window).bind("resize", function(event) {
-            if ($('#chart_div').width() != $('#chart_div').children()[0].width)
-                drawChart();
-        });	
+    .container
+        %h1
+            Usage
+            %span.capsule= usage.bandwidth_class_string.capitalize
+        .content
+            %label.primary
+                Policy
+                .label_appendage= "#{usage.policy_received_string} &darr; / #{usage.policy_sent_string} &uarr;"
+            %label.secondary
+                Actual
+                .label_appendage= "#{usage.actual_received_string} &darr; / #{usage.actual_sent_string} &uarr;"
+            #chart_container.primary
+                #chart_div
+                    %table{:style => "width: 100%; height: 100%;"}
+                        %tr
+                            %td.loading{:valign => :middle} Loading Chart Data...
+            - if @profile_user == @session_user
+                %input#force_scrape{:type => :button, :value => "Scrape Now"}
+                %span.form_appendage= "last updated #{usage.data_age}"
+            - else
+                %label{:style => "text-align: center; color: #777"}= "updated #{usage.data_age}"
 
-        $('#force_scrape').bind("click", function(event) {
-            $('#force_scrape').attr('disabled', 'disabled');
-            $('#force_scrape').attr('value', 'Forcing Scrape, Hold on...');
-            $.ajax({
-                type: "POST",
-                url: "#{url('/force_scrape')}",
-                success: function() { location.reload(); },
-                error: function() { location.reload(); }
+    :javascript
+        // jQuery function, called when page load is complete
+        $(document).ready(function() {
+            // when the window is resized, redraw the graph to the new size
+            $(window).bind("resize", function(event) {
+                if ($('#chart_div').width() != $('#chart_div').children()[0].width)
+                    drawChart();
+            });	
+
+            $('#force_scrape').bind("click", function(event) {
+                $('#force_scrape').attr('disabled', 'disabled');
+                $('#force_scrape').attr('value', 'Hold on...');
+                $.ajax({
+                    type: "POST",
+                    url: "#{url('/force_scrape')}",
+                    success: function() { location.reload(); },
+                    error: function() { location.reload(); }
+                });
             });
         });
-    });
 
-    google.load("visualization", "1", {packages:["corechart"]});
-    google.setOnLoadCallback(drawChart);
-    function drawChart() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Timestamp');
-        data.addColumn('number', 'Total');
-        #{report[:devices].map{ |device| "data.addColumn('number', '#{device[:display_name]}');" }.join ' '}
-        data.addRows(#{ report[:rows].to_json });
+        google.load("visualization", "1", {packages:["corechart"]});
+        google.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Timestamp');
+            data.addColumn('number', 'Total');
+            #{report[:devices].map{ |device| "data.addColumn('number', '#{device[:display_name]}');" }.join ' '}
+            data.addRows(#{ report[:rows].to_json });
 
-        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
-        chart.draw(data, {
-            legend: 'bottom', 
-            backgroundColor: '#FCFCFC',
-            areaOpacity: 1 / data.getNumberOfColumns(),
-            hAxis: { textPosition: 'none', direction: -1 }, 
-            vAxis: { minValue: 0, format: "#,### MB", textPosition: 'in' }, 
-            chartArea: { top: 0, left: 0, height: "85%", width: "100%" }
-        });
-    }
+            var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+            chart.draw(data, {
+                legend: 'bottom', 
+                backgroundColor: '#FCFCFC',
+                areaOpacity: 1 / data.getNumberOfColumns(),
+                hAxis: { textPosition: 'none', direction: -1 }, 
+                vAxis: { minValue: 0, format: "#,### MB", textPosition: 'in' }, 
+                chartArea: { top: 0, left: 0, height: "85%", width: "100%" }
+            });
+        }

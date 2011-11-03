@@ -28,7 +28,8 @@ post '/login/?' do
       
       redirect '/'
    else
-      return "Bad login"
+      @bad_login = true
+      haml :login
    end
 end
 
