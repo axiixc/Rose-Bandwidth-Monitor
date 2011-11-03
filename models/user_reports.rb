@@ -3,11 +3,23 @@ require 'yaml'
 
 module Rose
    class User
+      CachePath = "caches/reports/report_allusers.yaml"
+      
+      def self.report(only_public = true)
+         if !File.exists? CachePath
+            report = Reports.basic self.class.all( :public_stats => only_public, :order => [ :username.desc ] )
+            File.open(CachePath, "w") { |cache_file| cache_file.write report.to_yaml }
+            return report
+         end
+         
+         return YAML.load_file CachePath
+      end
+      
       def report_cache_path(name)
          return "caches/reports/#{name}_#{self.username}.yaml"
       end
       
-      def report_with_name(name, options = { :generate_if_missing => true, :generate_force => false})
+      def report_with_name(name, options = { :generate_if_missing => true, :generate_force => false })
          cache_name = report_cache_path name
          report_exists = File.exists? cache_name
          return ((!report_exists && options[:generate_if_missing]) || options[:generate_force]) ? _generate_report(name) : YAML.load_file(cache_name)
@@ -55,17 +67,33 @@ module Rose
          }
       end
       
+      TimestampFormat = "%l:%M %P"
+      
       def Reports.basic(user)
          return iterate_over_user(user) do |rows, row_length, device_mappings, main_entry|
             row = Array.new row_length, 0.0
             
-            row[0] = main_entry.timestamp.strftime "%l:%M %P"
+            row[0] = main_entry.timestamp.strftime TimestampFormat
             row[1] = main_entry.policy_mbytes_received
-            main_entry.device_entries.each do |device_entry|
-               row[device_mappings[device_entry.device.id]] = device_entry.policy_mbytes_received
-            end
+            main_entry.device_entries.each { |device_entry| row[device_mappings[device_entry.device.id]] = device_entry.policy_mbytes_received }
+            
             rows << row
-         end
+         end if user.class == User
+         
+         return iterate_over_users(user) do |rows, row_length, timestamp, user_mappings, entries|
+            row = Array.new row_length, 0.0
+            
+            row[0] = timestamp.strftime TimestampFormat
+            entries.each { |entry| row[user_mappings[entries.user.id]] = entry.policy_mbytes_recieved }
+            
+            rows << row
+         end if user.responds_to? :each
+      end
+      
+      def Reports.iterate_over_users(users)
+         row_length = 1
+         user_mappings = {}
+         users
       end
       
       def Reports.real(user)

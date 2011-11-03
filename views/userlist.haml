@@ -1,6 +1,13 @@
 .container
     %h1 All Users
     .content
+        #chart_container.primary
+            #chart_div
+                %table{:style => "width: 100%; height: 100%;"}
+                    %tr
+                        -# %td.loading{:valign => :middle} Loading Chart Data...
+                        %td.loading{:valign => :middle} Coming Soon!
+        
         - index = false
         - users = Rose::User.all( :public_stats => true, :order => [ :username.asc ] )
         - users.each do |user|
