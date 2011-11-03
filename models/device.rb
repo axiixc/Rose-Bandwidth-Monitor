@@ -9,7 +9,7 @@ module Rose
          bandwidth_entry = BandwidthDeviceEntry.create(
             :device => self,
             :main_entry => main_entry,
-            :timestamp => Time.new,
+            :timestamp => Time.now,
             :policy_mbytes_received => scrape_dict[:policy_mbytes_received],
             :policy_mbytes_sent => scrape_dict[:policy_mbytes_sent],
             :actual_mbytes_received => scrape_dict[:actual_mbytes_received],

@@ -1,6 +1,6 @@
 Dir['models/*'].each { |model| require './' + model }
 Dir['notification_providers/*'].each { |provider| require './' + provider }
-require './date_time_compat'
+require './date_time_util'
 
 Rose.setup_datamapper ARGV.include? '--production'
 Sleep_interval = 30

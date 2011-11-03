@@ -42,7 +42,7 @@ module Rose
          # Create and add the main entry
          main_entry = BandwidthMainEntry.create(
             :user => self,
-            :timestamp => Time.new,
+            :timestamp => Time.now,
             :policy_mbytes_received => scrape_dict[:main][:policy_mbytes_received],
             :policy_mbytes_sent => scrape_dict[:main][:policy_mbytes_sent],
             :actual_mbytes_received => scrape_dict[:main][:actual_mbytes_received],

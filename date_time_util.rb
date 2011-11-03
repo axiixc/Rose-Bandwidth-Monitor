@@ -25,7 +25,6 @@ module Rose
       end
       
       def self.humanize_pretty(secs)
-         secs = secs.to_i
          case secs
            when 0 then return 'just now'
            when 1 then return 'a second ago'
@@ -37,9 +36,8 @@ module Rose
            when 82801..172000 then return 'a day ago' # 86400 = 1 day
            when 172001..518400 then return ((secs+800)/(60*60*24)).to_i.to_s+' days ago'
            when 518400..1036800 then return 'a week ago'
+           else return ((secs+180000)/(60*60*24*7)).to_i.to_s+' weeks ago'
          end
-         
-         return ((secs+180000)/(60*60*24*7)).to_i.to_s+' weeks ago'
       end
    end
 end

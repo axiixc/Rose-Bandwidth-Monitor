@@ -11,29 +11,35 @@
             %p= "Viewing bandwidth usage for #{@profile_user.username}"
     - elsif @profile_user == @session_user && @profile_standalone_layout
         .container.notification.message
-            %p= "This is your bandwidth usage"
-
-    .container
-        %h1
-            Usage
-            %span.capsule= usage.bandwidth_class_string.capitalize
-        .content
-            %label.primary
-                Policy
-                .label_appendage= "#{usage.policy_received_string} &darr; / #{usage.policy_sent_string} &uarr;"
-            %label.secondary
-                Actual
-                .label_appendage= "#{usage.actual_received_string} &darr; / #{usage.actual_sent_string} &uarr;"
-            #chart_container.primary
-                #chart_div
-                    %table{:style => "width: 100%; height: 100%;"}
-                        %tr
-                            %td.loading{:valign => :middle} Loading Chart Data...
-            - if @profile_user == @session_user
-                %input#force_scrape{:type => :button, :value => "Scrape Now"}
-                %span.form_appendage= "last updated #{usage.data_age}"
-            - else
-                %label{:style => "text-align: center; color: #777"}= "updated #{usage.data_age}"
+            %p This is your bandwidth usage
+    
+    - if usage.nil?
+        .container.notification.error
+            %p
+                No bandwidth usage data has been collected.
+                %input#force_scrape{:type => :button, :value => "scrape now?"}
+    - else
+        .container
+            %h1
+                Usage
+                %span.capsule= usage.bandwidth_class_string.capitalize
+            .content
+                %label.primary
+                    Policy
+                    .label_appendage= "#{usage.policy_received_string} &darr; / #{usage.policy_sent_string} &uarr;"
+                %label.secondary
+                    Actual
+                    .label_appendage= "#{usage.actual_received_string} &darr; / #{usage.actual_sent_string} &uarr;"
+                #chart_container.primary
+                    #chart_div
+                        %table{:style => "width: 100%; height: 100%;"}
+                            %tr
+                                %td.loading{:valign => :middle} Loading Chart Data...
+                - if @profile_user == @session_user
+                    %input#force_scrape{:type => :button, :value => "Scrape Now"}
+                    %span.form_appendage= "last updated #{usage.data_age}"
+                - else
+                    %label{:style => "text-align: center; color: #777"}= "updated #{usage.data_age}"
 
     :javascript
         // jQuery function, called when page load is complete
