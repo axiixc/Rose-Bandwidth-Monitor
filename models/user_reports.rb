@@ -55,8 +55,8 @@ module Rose
             yield(rows, row_length, device_mappings, main_entry)
          end
          
-         newest_time = DateTime.datetime_to_time(entries[0].timestamp)
-         oldest_time = DateTime.datetime_to_time(entries[entries.size - 1].timestamp)
+         newest_time = DateTimeUtil.datetime_to_time(entries[0].timestamp)
+         oldest_time = DateTimeUtil.datetime_to_time(entries[entries.size - 1].timestamp)
          
          { 
             :devices => devices, 

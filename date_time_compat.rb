@@ -1,13 +1,14 @@
 # Compatibility between 1.8 and 1.9 for time conversion
+# and other helper methods
 
 module Rose
-   module DateTime
-      def DateTime.datetime_to_time(dest)
+   module DateTimeUtil
+      def self.datetime_to_time(dest)
          usec = (dest.sec_fraction * 60 * 60 * 24 * (10**6)).to_i
-         Time.send(:gm, dest.year, dest.month, dest.day, dest.hour, dest.min, dest.sec, usec)
+         Time.send(:local, dest.year, dest.month, dest.day, dest.hour, dest.min, dest.sec, usec)
       end
       
-      def DateTime.humanize(secs)
+      def self.humanize(secs)
          [[60, :second], [60, :minute], [24, :hour], [1000, :day]].map { |count, name|
             if secs > 0
                secs, n = secs.divmod(count)
@@ -16,14 +17,15 @@ module Rose
          }.compact.reverse.join(' ')
       end
       
-      def DateTime.humanize_rounded(secs)
+      def self.humanize_rounded(secs)
          [[86400, :day], [3600, :hour], [60, :minute], [1, :second]].each do |group|
             n = secs / group[0]
             return "#{n.to_i} #{group[1]}#{n.to_i == 1 ? "" : :s}" unless n < 1
          end
       end
       
-      def DateTime.humanize_pretty(secs)
+      def self.humanize_pretty(secs)
+         secs = secs.to_i
          case secs
            when 0 then return 'just now'
            when 1 then return 'a second ago'

@@ -32,7 +32,7 @@ module Rose
       end
       
       def data_age
-         DateTime.humanize_pretty Time.new - DateTime.datetime_to_time(self.timestamp)
+         DateTimeUtil.humanize_pretty Time.now - DateTimeUtil.datetime_to_time(self.timestamp)
       end
    end
 
