@@ -5,6 +5,7 @@ end
 post '/register' do
    new_user = Rose::User.first_or_create(:username => params[:username], :password => params[:password])
    new_user.save
+   fork { new_user.scrape }
    
    login_user new_user
    redirect '/'

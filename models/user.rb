@@ -35,13 +35,13 @@ module Rose
          )
       end
    
-      def add_bandwidth_entry(scrape_dict = nil)
-         scrape_dict ||= self.scrape_dict
+      def add_bandwidth_entry(scrape_event = nil)
          return if scrape_dict.nil?
          
          # Create and add the main entry
          main_entry = BandwidthMainEntry.create(
             :user => self,
+            :scrape_event => scrape_event,
             :timestamp => Time.now,
             :policy_mbytes_received => scrape_dict[:main][:policy_mbytes_received],
             :policy_mbytes_sent => scrape_dict[:main][:policy_mbytes_sent],

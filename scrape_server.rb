@@ -6,9 +6,7 @@ Rose.setup_datamapper ARGV.include? '--production'
 Sleep_interval = 30
 
 loop do
-   Rose::User.all(:active => true).each do |user|
-      user.scrape
-   end
+   Rose::ScrapeEvent.scrape_all
    
    puts "Scrape complete! Sleeping for #{Sleep_interval} minutes..."
    sleep(60 * Sleep_interval)

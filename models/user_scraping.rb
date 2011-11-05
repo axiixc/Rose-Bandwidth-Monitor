@@ -21,10 +21,10 @@ module Rose
          self.last_status_code == "200"
       end
       
-      def scrape(options = { :update => true, :check_and_notify => true, :generate_reports => true })
-         self.add_bandwidth_entry if options[:update]
-         self.check_and_notify if options[:check_and_notify]
-         self.report_with_name :basic, { :generate_force => true } if options[:generate_reports]
+      def scrape(scrape_event = nil)
+         self.add_bandwidth_entry(scrape_event)
+         self.check_and_notify
+         self.report_with_name :basic, true
       end
    
       def scrape_dict

@@ -73,7 +73,7 @@ module Rose
             property :policy_mbytes_sent, DataMapper::Property::Float
             property :actual_mbytes_received, DataMapper::Property::Float
             property :actual_mbytes_sent, DataMapper::Property::Float
-            property :timestamp, DataMapper::Property::DateTime
+            property :timestamp, DataMapper::Property::Time
          end
       end
    end
@@ -82,6 +82,7 @@ module Rose
       include BandwidthEntry
 
       belongs_to :user
+      belongs_to :scrape_event, :required => false
 
       property :bandwidth_class, Float
       has n, :device_entries, :model => 'BandwidthDeviceEntry', :child_key => [ :main_entry_id ]
@@ -92,6 +93,14 @@ module Rose
    
       belongs_to :device
       belongs_to :main_entry, :model => 'BandwidthMainEntry'
+   end
+   
+   class ScrapeEvent
+      include DataMapper::Resource
+      
+      property :id, Serial
+      property :timestamp, Time
+      has n, :bandwidth_entries, :model => 'BandwidthMainEntry'
    end
    
    class Notification

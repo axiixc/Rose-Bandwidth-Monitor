@@ -3,11 +3,11 @@ require 'yaml'
 
 module Rose
    class User
-      def self.report_with_name(name, force_generate = true)
+      def self.report_with_name(name, force_generate = false)
          Reports.fetch_report Reports::Query.new(name, :all, self.all(:public_stats => true, :order => [:username.desc]), force_generate)
       end
       
-      def report_with_name(name, force_generate = true)
+      def report_with_name(name, force_generate = false)
          Reports.fetch_report Reports::Query.new(name, :single, self, force_generate)
       end
    end
@@ -34,12 +34,12 @@ module Rose
       
       def self.fetch_report(query)
          cache_path = make_cache_path query
-         return (!File.exists? cache_path || query.force_generate) ? generate_report(query) : YAML.load_file(cache_path)
+         return (!File.exists?(cache_path) || query.force_generate) ? generate_report(query) : YAML.load_file(cache_path)
       end
       
       def self.generate_report(query)
          report = (query.type == :all) ? AllUsers.send(query.name, query.attachment) : SingleUser.send(query.name, query.attachment)
-         File.open(make_cache_path(query), 'w') { |f| f.write report.to_yaml }
+         File.open(make_cache_path(query), 'w') { |f| f.write(report.to_yaml) }
          report
       end
       
@@ -67,8 +67,8 @@ module Rose
                yield(rows, row_length, device_mappings, main_entry)
             end
          
-            newest_time = DateTimeUtil.datetime_to_time(entries[0].timestamp)
-            oldest_time = DateTimeUtil.datetime_to_time(entries[entries.size - 1].timestamp)
+            newest_time = entries[0].timestamp # DateTimeUtil.datetime_to_time(entries[0].timestamp)
+            oldest_time = entries.last.timestamp # DateTimeUtil.datetime_to_time(entries[entries.size - 1].timestamp)
          
             { 
                :devices => devices, 
