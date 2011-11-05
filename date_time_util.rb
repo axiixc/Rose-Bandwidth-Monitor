@@ -25,10 +25,10 @@ module Rose
       end
       
       def self.humanize_pretty(secs)
+         secs = secs.to_i
          case secs
-           when 0 then return 'just now'
-           when 1 then return 'a second ago'
-           when 2..59 then return secs.to_s+' seconds ago' 
+           when 0..5 then return 'just now'
+           when 6..59 then return secs.to_s+' seconds ago' 
            when 60..119 then return 'a minute ago' #120 = 2 minutes
            when 120..3540 then return (secs/60).to_i.to_s+' minutes ago'
            when 3541..7100 then return 'an hour ago' # 3600 = 1 hour
