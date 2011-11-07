@@ -95,6 +95,9 @@ module Rose
       module AllUsers
          def self.iterate_over_events(events)
          end
+         
+         def self.basic(events)
+         end
       end #-- End AllUsers Module
    end
 end

@@ -4,6 +4,9 @@ end
 
 configure :development do
    Rose.setup_datamapper false
+   Rose::User.all.each do |user|
+      user.update :full_name => nil
+   end
 end
 
 configure do

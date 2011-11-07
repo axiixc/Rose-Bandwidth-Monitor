@@ -1,4 +1,4 @@
-- report = Rose::User.report_with_name :basic
+-# report = Rose::User.report_with_name :basic
 
 .container
     %h1 All Users
@@ -14,5 +14,5 @@
         - users = Rose::User.all( :public_stats => true, :order => [ :username.asc ] )
         - users.each do |user|
             %p{:class => (index = !index) ? 'primary' : 'secondary'}
-                %a{:href => url("/profile/#{user.username}")}= user.username
-        %p{:style => 'text-align: center;'}= "#{users.size} users found"
+                %a{:href => url("/profile/#{user.username}")}= user.display_name
+        %label.final= "bandwidth usage for #{users.size} users"

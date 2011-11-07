@@ -8,7 +8,7 @@
 
     - if @profile_user != @session_user && !@profile_using_api_token
         .container.notification.message
-            %p= "Viewing bandwidth usage for #{@profile_user.username}"
+            %p= "Viewing bandwidth usage for #{@profile_user.display_name}"
     - elsif @profile_user == @session_user && @profile_standalone_layout
         .container.notification.message
             %p This is your bandwidth usage
@@ -39,7 +39,7 @@
                     %input#force_scrape{:type => :button, :value => "Scrape Now"}
                     %span.form_appendage= "last updated #{usage.data_age}"
                 - else
-                    %label{:style => "text-align: center; color: #777"}= "updated #{usage.data_age}"
+                    %label.final= "updated #{usage.data_age}"
 
     :javascript
         // jQuery function, called when page load is complete

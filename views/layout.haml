@@ -16,18 +16,18 @@
                     %ul
                         - if @session_user.nil?
                             %li>
-                                %a{:href => url('/userlist')}> stats
+                                %a{:href => url('/userlist')}> Stats
                             %li>
-                                %a{:href => url('/login')}> login
+                                %a{:href => url('/login')}> Login
                             %li>
-                                %a{:href => url('/register')}> register
+                                %a{:href => url('/register')}> Register
                         - else
                             %li>
-                                %a{:href => url('/')}>= @session_user.username
+                                %a{:href => url('/userlist')}> Stats
                             %li>
-                                %a{:href => url('/userlist')}> stats
+                                %a{:href => url('/logout')}> Logout
                             %li>
-                                %a{:href => url('/logout')}> logout
+                                %a{:href => url('/')}>= @session_user.display_name
                     %h1
                         %a{:href => url('/')}
                             %img{:src => url('/images/nav-logo.png')}

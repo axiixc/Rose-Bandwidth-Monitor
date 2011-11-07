@@ -23,6 +23,7 @@ module Rose
       property :username, String, :required => true
       property :password, String, :required => true
       property :pwhash, String
+      property :full_name, String
       property :protected_stats_token, String
       property :public_stats, Boolean, :default => false
       property :active, Boolean, :default => true
