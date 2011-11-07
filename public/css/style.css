@@ -404,7 +404,12 @@ label input[type=checkbox] {
 }
 
 @media only screen and (max-width: 320px) {
-	div.nav ul li {
-		padding: 0.4em 9px;
+	div.nav h1 {
+		display: none;
+	}
+	
+	div.nav ul {
+		float: none;
+		text-align: center;
 	}
 }
