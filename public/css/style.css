@@ -390,21 +390,21 @@ label input[type=checkbox] {
 	width: 90px;
 }
 
-@media only screen and (max-width: 530px) {
+@media only screen and (max-width: 550px) {
 	div.nav h1 {
 		font-size: 1em;
 	}
 }
 
-@media only screen and (max-width: 455px) {
-	div.nav h1 {
-		font-size: 0.8em;
-	}
-}
-
-@media only screen and (max-width: 430px) {
+@media only screen and (max-width: 480px) {
 	div.nav h1 {
 		font-size: 0;
 		color: transparent;
+	}
+}
+
+@media only screen and (max-width: 320px) {
+	div.nav ul li {
+		padding: 0.4em 9px;
 	}
 }
