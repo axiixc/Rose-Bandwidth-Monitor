@@ -22,7 +22,7 @@
         .container
             %h1
                 Usage
-                %span.capsule= usage.bandwidth_class_string.capitalize
+                %span.capsule{:class => usage.bandwidth_class == 0 ? :c_green : :g_red}= usage.bandwidth_class_string.capitalize
             .content
                 %label.primary
                     Policy
