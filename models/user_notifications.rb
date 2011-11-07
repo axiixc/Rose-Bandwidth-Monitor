@@ -1,6 +1,5 @@
 module Rose
    class User
-      
       class << self
          @@notification_providers_array = []
          @@notification_providers_hash = {}
@@ -29,27 +28,25 @@ module Rose
       end
       
       def check_and_notify
+         # No point in checking if there are no providers
          return if self.notification_providers.all(:enabled => true).empty?
          
-         bandwidth_entry = self.bandwidth_entries.all :order => [ :timestamp.desc ], :limit => 2
-         return if bandwidth_entry.size < 1
-
+         current_entry, last_entry = self.bandwidth_entries.all :order => [ :timestamp.desc ], :limit => 2
+         return if current_entry.nil? # Or if there is no data
+         
          # If unrestricted, check for a warn notification
-         if bandwidth_entry[0].bandwidth_class == 0.0 &&
-               ((not bandwidth_entry[1].nil? && bandwidth_entry[1].policy_mbytes_received < self.notification_warn_level) &&
-               bandwidth_entry[0].policy_mbytes_received >= self.notification_warn_level)
-            message = "Bandwidth usage at #{bandwidth_entry[0].policy_received_string}"
+         if current_entry.bandwidth_class == 0.0 &&
+               ((!last_entry.nil? && last_entry.policy_mbytes_received < self.notification_warn_level) &&
+               current_entry.policy_mbytes_received >= self.notification_warn_level)
+            notification = { :type => :warn_level, :entry => current_entry }
 
          # Send notifications when bandwidth class changes
-         elsif bandwidth_entry[0].bandwidth_class != self.notification_last_bandwidth_class_value
-            message = "Bandwidth class is now #{bandwidth_entry[0].bandwidth_class_string}, usage at #{bandwidth_entry[0].policy_received_string}"
-            self.notification_last_bandwidth_class_value = bandwidth_entry[0].bandwidth_class
-            self.save
+         elsif current_entry.bandwidth_class != self.notification_last_bandwidth_class_value
+            notification = { :type => :bandwidth_class, :entry => current_entry }
+            self.update :notification_last_bandwidth_class_value => current_entry.bandwidth_class
          end
-
-         return if message.nil?
-         self.notification_providers.all(:enabled => true).each { |provider| provider.notify message }
-         puts "Notify #{self.username}: #{message}"
+         
+         self.notification_providers.all(:enabled => true).each { |provider| provider.notify notification } unless notification.nil?
       end
    end
 end

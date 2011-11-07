@@ -32,7 +32,14 @@ class BoxcarAPINotificationProvider
       boxcar_provider.notify self.provider.user_configuration[:email], "Hey, you're signed up bandwidth notifications!"
    end
    
-   def notify(message)
+   def notify(notification)
+      case notification[:type]
+      when :bandwidth_class
+         message = "Bandwidth class now #{notification[:entry].bandwidth_class_string}, usage at #{notification[:entry].policy_received_string}"
+      else
+         message = "Usage at #{notification[:entry].policy_received_string}"
+      end
+      
       boxcar_provider.notify self.provider.user_configuration[:email], message
    end
 end

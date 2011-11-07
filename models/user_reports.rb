@@ -4,7 +4,7 @@ require 'yaml'
 module Rose
    class User
       def self.report_with_name(name, force_generate = false)
-         Reports.fetch_report Reports::Query.new(name, :all, self.all(:public_stats => true, :order => [:username.desc]), force_generate)
+         Reports.fetch_report Reports::Query.new(name, :all, ScrapeEvent.all, force_generate)
       end
       
       def report_with_name(name, force_generate = false)
@@ -67,8 +67,8 @@ module Rose
                yield(rows, row_length, device_mappings, main_entry)
             end
          
-            newest_time = entries[0].timestamp # DateTimeUtil.datetime_to_time(entries[0].timestamp)
-            oldest_time = entries.last.timestamp # DateTimeUtil.datetime_to_time(entries[entries.size - 1].timestamp)
+            newest_time = entries[0].timestamp
+            oldest_time = entries.last.timestamp
          
             { 
                :devices => devices, 
@@ -93,6 +93,8 @@ module Rose
       end #-- End SingleUser Module
       
       module AllUsers
+         def self.iterate_over_events(events)
+         end
       end #-- End AllUsers Module
    end
 end
