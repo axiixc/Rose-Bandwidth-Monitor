@@ -8,7 +8,7 @@
 
     - if @profile_user != @session_user && !@profile_using_api_token
         .container.notification.message
-            %p= "Viewing bandwidth usage for #{@profile_user.display_name}"
+            %p= "Bandwidth usage for #{@profile_user.display_name}"
     - elsif @profile_user == @session_user && @profile_standalone_layout
         .container.notification.message
             %p This is your bandwidth usage
@@ -26,10 +26,10 @@
             .content
                 %label.primary
                     Policy
-                    .label_appendage= "#{usage.policy_received_string} &darr; / #{usage.policy_sent_string} &uarr;"
+                    .label_appendage= "#{usage.policy_received_string} &#x25b2;<span style='color: #777;'>&#x25bc; #{usage.policy_sent_string}</span>"
                 %label.secondary
                     Actual
-                    .label_appendage= "#{usage.actual_received_string} &darr; / #{usage.actual_sent_string} &uarr;"
+                    .label_appendage= "#{usage.actual_received_string} &#x25b2;<span style='color: #777;'>&#x25bc; #{usage.actual_sent_string}</span>"
                 #chart_container.primary
                     #chart_div
                         %table{:style => "width: 100%; height: 100%;"}
