@@ -30,7 +30,7 @@
                                 %a{:href => url('/')}>= @session_user.display_name
                     %h1
                         %a{:href => url('/')}
-                            %img{:src => url('/images/nav-logo.png')}
+                            %img{:src => url('/images/Icon-Navigation.png')}
                             Bandwidth Monitor
             
             - if not (@session_user.nil? or @session_user.can_scrape?)
@@ -49,4 +49,4 @@
             = yield
             
             .footer
-                %a{:href => "https://github.com/axiixc/Rose-Bandwidth-Monitor", :target => "_blank"} Visit Project on Github
+                %a{:href => "https://github.com/axiixc/Rose-Bandwidth-Monitor", :target => "_blank"} View Project on Github
