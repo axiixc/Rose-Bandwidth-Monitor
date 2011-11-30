@@ -54,7 +54,12 @@ module Rose
          
             user.devices.each do |device| 
                device_mappings[device.id] = (row_length += 1)
-               devices << { :network_address => device.network_address, :host => device.host, :display_name => device.display_name, :index => row_length }
+               devices << {
+                  :network_address => device.network_address,
+                  :host => device.host,
+                  :display_name => device.display_name,
+                  :index => row_length
+               }
             end
          
             row_length += 1
