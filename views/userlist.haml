@@ -3,16 +3,16 @@
 .container
     %h1 All Users
     .content
-        #chart_container.primary
-            #chart_div
-                %table{:style => "width: 100%; height: 100%;"}
-                    %tr
-                        -# %td.loading{:valign => :middle} Loading Chart Data...
-                        %td.loading{:valign => :middle} Coming Soon!
+        -# #chart_container.primary
+        -#     #chart_div
+        -#         %table{:style => "width: 100%; height: 100%;"}
+        -#             %tr
+        -#                 -# %td.loading{:valign => :middle} Loading Chart Data...
+        -#                 %td.loading{:valign => :middle} Coming Soon!
         
         - index = false
         - users = Rose::User.all( :public_stats => true, :order => [ :username.asc ] )
         - users.each do |user|
             %p{:class => (index = !index) ? 'primary' : 'secondary'}
                 %a{:href => url("/profile/#{user.username}")}= user.display_name
-        %label.final= "bandwidth usage for #{users.size} users"
+        %label.final= "public profiles for #{users.size} users"
