@@ -11,11 +11,7 @@ module Rose
          self.pwhash = self.class.hash_password new_pw
          @can_scrape = nil
       end
-      
-      before :create do
-         self.reset_protected_stats_token
-      end
-      
+
       def reset_protected_stats_token
          self.protected_stats_token = Digest::SHA1.hexdigest self.pwhash + Time.now.to_s
       end

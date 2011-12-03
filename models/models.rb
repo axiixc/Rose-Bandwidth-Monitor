@@ -37,6 +37,10 @@ module Rose
       has n, :devices, :order => [ :network_address.desc ]
       has n, :pending_notifications, :model => 'Notification'
       has n, :notification_providers, :model => 'UserNotificationProvider'
+
+      before :create do
+         self.reset_protected_stats_token
+      end
    end
    
    class UserNotificationProvider
