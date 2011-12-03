@@ -1,15 +1,8 @@
-**Note:** some components of this document do not reflect the current state of RBM notifications. However, it does specify the interface for the 1.0 milestone, and therfore is considered more valid than the current code.
-
-Currently the major inconsistencies are:
-
-* `UserNotificationProviderDelgate` is an included module
-* Full support for removed providers is not yet implemented
-
 The Notification Provider interface allows custom notification handling code to be easily added to RBM. The `boxcar.rb` provider is considered part of the base RBM distribution, and is a good example use of the interface.
 
 # Understanding Notification Flow in RBM
 
-RBM will handle all scraping, processing, and storage of information. Notifications are seen as a separate part of this process, in which RBM will reach out to 3rd party code to handle notification delivery. As such Notification Providers function through a callback-style API. When an appropriate (trigger)[Notification-Triggers] is hit for a given user RBM will query for any active `UserNotificationProvider`s. Assuming one or more is found, RBM will invoke their `notify` method with the appropriate notification hash. From here notification processing is entirely in the hands of the providers, and RBM will take no further action.
+RBM will handle all scraping, processing, and storage of information. Notifications are seen as a separate part of this process, in which RBM will reach out to 3rd party code to handle notification delivery. As such Notification Providers function through a callback-style API. When an appropriate [trigger](Notification-Triggers) is hit for a given user RBM will query for any active `UserNotificationProvider`s. Assuming one or more is found, RBM will invoke their `notify` method with the appropriate notification hash. From here notification processing is entirely in the hands of the providers, and RBM will take no further action.
 
 # Implementing a Notification Provider
 
