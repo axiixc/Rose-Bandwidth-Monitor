@@ -4,10 +4,14 @@
         %p You must register with your Rose-Hulman/Kerberos login information. Once registered you will be able to change your password, but not your username. <b style="color: red;">Please note, your password will be stored unencrypted or hashed in a sqlite database.</b> This is because a plain text password is required to complete the authentication with Rose's servers when scraping bandwidth usage. Your information will only ever be transferred over SSL, and only when inside the school network (by virtue of a Rose policy not allowing access to the bandwidth page outside campus or without a VPN).
         %p A <a href="http://boxcar.io/">boxcar</a> account is required for push notifications. Boxcar is only available for iOS.
 
+- if @invalid_registration
+    %div.container.notification.error
+        %p Invalid registration. Make sure you are using a valid Rose-Hulman login.
+
 .container
     %h1 Register
     .content
-        %form{:action => url('/register'), :method => :post}
+        %form{:action => url('/register'), :method => :post, :id => "registration"}
             %label.primary{:key => :username}
                 Username
                 %input{:type => :text, :id => :username, :name => :username}
@@ -16,3 +20,8 @@
                 %input{:type => :password, :id => :password, :name => :password}
             %input{:type => :submit, :value => "Register"}
                 %span.form_appendage be sure to read the above warnings first!
+
+:javascript
+    $('#registration').submit(function(){
+        $('input[type=submit]', this).attr('disabled', 'disabled');
+    });

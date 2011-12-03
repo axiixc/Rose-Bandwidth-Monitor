@@ -3,12 +3,18 @@ get '/register' do
 end
 
 post '/register' do
-   new_user = Rose::User.first_or_create(:username => params[:username], :password => params[:password])
-   new_user.save
-   fork { new_user.scrape }
+   new_user = Rose::User.new(:username => params[:username], :password => params[:password])
+   new_user.scrape
    
-   login_user new_user
-   redirect '/'
+   if new_user.last_status_code != "200"
+      @invalid_registration = true
+      haml :register
+   else
+      new_user.save
+      login_user new_user
+      
+      redirect '/'
+   end
 end
 
 get '/login' do
