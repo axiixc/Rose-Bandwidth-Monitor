@@ -37,9 +37,9 @@
                 %div.container.notification.error
                     %p
                         Last update failed with status code 
-                        %code= user.last_status_code
+                        %code= @session_user.last_status_code
                         %br
-                        Check your login informations
+                        Double check your login information
             
             - if not @session_user.nil?
                 - @session_user.each_pending_notification(:destroy => true) do |notification| 
