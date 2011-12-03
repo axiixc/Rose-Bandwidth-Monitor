@@ -10,9 +10,7 @@ module BoxcarAPI
    end
 end
 
-class BoxcarAPINotificationProvider
-   include Rose::UserNotificationProviderDelegate
-   
+class BoxcarAPINotificationProvider < Rose::UserNotificationProviderDelegate
    BoxcarProviderKey = 'QQ0tigQV8w8YwuCL5WNS'
    BoxcarProviderSecret = 'bZHAIDZzWAGJneboZsP7aWPbWpGRNkgj6yAkxErF'
    

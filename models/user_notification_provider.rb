@@ -20,22 +20,18 @@ module Rose
       end
    end
    
-   module UserNotificationProviderDelegate
-      def self.included(base)
-         base.class_eval do
-            attr_reader :user
-            attr_reader :provider
-            
-            
-            def base.configuration_options
-               # Valid options and return format:
-               # [
-               #    { :type => :text, :name => :text, :label => "Text" },
-               #    { :type => :password, :name => :password, :label => "Password" },
-               #    { :type => :checkbox, :name => :checkbox, :label => "Checkbox" }
-               # ]
-            end
-         end
+   class UserNotificationProviderDelegate
+      attr_reader :user
+      attr_reader :provider
+      
+      
+      def self.configuration_options
+         # Valid options and return format:
+         # [
+         #    { :type => :text, :name => :text, :label => "Text" },
+         #    { :type => :password, :name => :password, :label => "Password" },
+         #    { :type => :checkbox, :name => :checkbox, :label => "Checkbox" }
+         # ]
       end
       
       def initialize(user, provider)
