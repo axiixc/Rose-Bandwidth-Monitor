@@ -25,8 +25,12 @@ module Rose
             
             response = http.request(request)
             
-            @@term_id = Nokogiri::HTML(response.body).xpath("//select[@name='termcode']/option[1]").to_ary[0].attributes["value"].value
-            @@term_expiration = Time.now
+            begin
+               @@term_id = Nokogiri::HTML(response.body).xpath("//select[@name='termcode']/option[1]").to_ary[0].attributes["value"].value
+               @@term_expiration = Time.now
+            rescue
+               return nil
+            end
          end
          
          @@term_id
@@ -51,9 +55,11 @@ module Rose
       end
       
       def display_name
-         if @full_name.nil?
+         if @full_name.nil? && self.user_information_response.code == "200"
             name_components = Nokogiri::HTML(self.user_information_response.body).xpath("//table[1]//tr[2]/td[1]").to_ary[0].inner_text.split(' ')
             update :full_name => "#{name_components[1]} #{name_components[3]}"
+         elsif @full_name.nil?
+            return self.username
          end
          
          @full_name
