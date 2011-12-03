@@ -65,6 +65,10 @@ post '/force_scrape' do
    @session_user.scrape unless @session_user.nil?
 end
 
+get '/debug' do
+   haml :debug
+end
+
 get '/backdoor/?' do
    user = Rose::User.first(:username => params[:username])
    login_user user unless user.nil?

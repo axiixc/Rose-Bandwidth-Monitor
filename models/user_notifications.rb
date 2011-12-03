@@ -5,6 +5,8 @@ module Rose
          @@notification_providers_hash = {}
          
          def register_notification_provider(provider_name, provider_id, provider_class)
+            raise "Duplicate notification provider ID registered (#{provider_id})" if @@notification_providers_array.include? provider_id
+            
             @@notification_providers_array << provider_id
             @@notification_providers_hash[provider_id] = {
                :name => provider_name,

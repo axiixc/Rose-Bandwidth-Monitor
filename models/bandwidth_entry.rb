@@ -2,19 +2,6 @@ require './value_formatting.rb'
 
 module Rose
    module BandwidthEntry
-      def self.included(base)
-         base.class_eval do
-            include DataMapper::Resource
-
-            property :id, DataMapper::Property::Serial
-            property :policy_mbytes_received, DataMapper::Property::Float
-            property :policy_mbytes_sent, DataMapper::Property::Float
-            property :actual_mbytes_received, DataMapper::Property::Float
-            property :actual_mbytes_sent, DataMapper::Property::Float
-            property :timestamp, DataMapper::Property::DateTime
-         end
-      end
-   
       def policy_received_string
          Rose.string_from_mbytes self.policy_mbytes_received
       end
@@ -31,8 +18,14 @@ module Rose
          Rose.string_from_mbytes self.actual_mbytes_sent
       end
       
+      TimestampFormat = "%l:%M %P"
+      
+      def pretty_timestamp
+         self.timestamp.strftime TimestampFormat
+      end
+      
       def data_age
-         DateTimeUtil.humanize_pretty Time.now - self.timestamp # DateTimeUtil.datetime_to_time(self.timestamp)
+         DateTimeUtil.humanize_pretty Time.now - DateTimeUtil.datetime_to_time(self.timestamp)
       end
    end
 

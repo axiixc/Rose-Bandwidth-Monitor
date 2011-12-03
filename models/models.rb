@@ -74,7 +74,7 @@ module Rose
             property :policy_mbytes_sent, DataMapper::Property::Float
             property :actual_mbytes_received, DataMapper::Property::Float
             property :actual_mbytes_sent, DataMapper::Property::Float
-            property :timestamp, DataMapper::Property::Time
+            property :timestamp, DataMapper::Property::DateTime
          end
       end
    end

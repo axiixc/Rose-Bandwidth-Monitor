@@ -44,7 +44,6 @@ module Rose
       end
       
       WindowLength = 36 * 60 * 60
-      TimestampFormat = "%l:%M %P"
       
       module SingleUser
          def self.iterate_over_user(user)
@@ -88,7 +87,7 @@ module Rose
             return iterate_over_user(user) do |rows, row_length, device_mappings, main_entry|
                row = Array.new row_length, 0.0
             
-               row[0] = main_entry.timestamp.strftime TimestampFormat
+               row[0] = main_entry.pretty_timestamp
                row[1] = main_entry.policy_mbytes_received
                main_entry.device_entries.each { |device_entry| row[device_mappings[device_entry.device.id]] = device_entry.policy_mbytes_received }
             
