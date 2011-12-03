@@ -9,7 +9,9 @@ post '/settings/notifications/?' do
          provider = @session_user.notification_providers.first :provider_id => provider_id
          provider_enabled = !params[:enabled][index].to_s.empty?
          
-         next if provider.nil? && !provider_enabled
+         # Changed from this behavior, now all fields will save
+         # regardless of the state of the notification provider
+         # next if provider.nil? && !provider_enabled
          
          provider = Rose::UserNotificationProvider.create :user => @session_user, :provider_id => provider_id if provider.nil?
          provider.enabled = provider_enabled
@@ -19,30 +21,6 @@ post '/settings/notifications/?' do
          provider.save
       end
    end
-   
-   redirect '/'
-end
-
-post '/settings/notifications--old/?' do
-   if not params[:disable_notifications].nil?
-      @session_user.notification_enabled = false
-   else
-      # If the email has changed, resubmit for subscription
-      if @session_user.notification_enabled && params[:email].nil?
-         @session_user.add_notification "Notifications disabled. Please enter a boxcar email address.", :warning
-      elsif @session_user.notification_boxcar_email.nil? or not (params[:email].nil? or @session_user.notification_boxcar_email == params[:email])
-         fork { @session_user.subscribe! }
-      end
-   
-      # Write the rest of the configuration
-      @session_user.notification_boxcar_email = params[:email]
-      @session_user.notification_enabled = !params[:email].empty?
-      
-      warn_level = params[:warn_level].to_f
-      @session_user.notification_warn_level = warn_level unless warn_level <= 0.0
-   end
-   
-   @session_user.save
    
    redirect '/'
 end
