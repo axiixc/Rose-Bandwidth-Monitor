@@ -33,11 +33,13 @@ module Rose
       end
       
       def self.fetch_report(query)
+         puts "Fetch report"
          cache_path = make_cache_path query
          return (!File.exists?(cache_path) || query.force_generate) ? generate_report(query) : YAML.load_file(cache_path)
       end
       
       def self.generate_report(query)
+         puts "Generate report"
          report = (query.type == :all) ? AllUsers.send(query.name, query.attachment) : SingleUser.send(query.name, query.attachment)
          File.open(make_cache_path(query), 'w') { |f| f.write(report.to_yaml) }
          report
