@@ -10,20 +10,18 @@ module Rose
       end
       
       def enabled=(enabled)
-         call_delegate = enabled ^ self.enabled
          super enabled
-         delegate.send(enabled ? :subscribe : :unsubscribe) if call_delegate
+         delegate.send(enabled ? :subscribe : :unsubscribe) if (enabled ^ self.enabled)
       end
       
       def notify(notification)
-         delegate.notify notification
+         self.delegate.notify notification unless self.delegate.nil?
       end
    end
    
    class UserNotificationProviderDelegate
       attr_reader :user
       attr_reader :provider
-      
       
       def self.configuration_options
          # Valid options and return format:
