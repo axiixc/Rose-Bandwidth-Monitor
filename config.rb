@@ -14,4 +14,7 @@ configure do
    
    EXCLUSIVE_PATHS = [ '/login', '/register' ]
    UNPROTECTED_PATHS = [ '/backdoor', '/userlist', '/profile' ] + EXCLUSIVE_PATHS
+   
+   # Clear all caches
+   Dir['caches/reports/*'].each { |f| File::delete(f) }
 end
