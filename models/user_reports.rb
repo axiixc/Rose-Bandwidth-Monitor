@@ -47,7 +47,7 @@ module Rose
       
       module SingleUser
          def self.iterate_over_user(user)
-            row_length = 1
+            row_length = 2
             device_mappings = {}
             devices = []
          
@@ -86,11 +86,12 @@ module Rose
          def self.basic(user)
             return iterate_over_user(user) do |rows, row_length, device_mappings, main_entry|
                row = Array.new row_length, 0.0
-            
+               
                row[0] = main_entry.pretty_timestamp
                row[1] = main_entry.policy_mbytes_received
+               row[2] = main_entry.policy_mbytes_sent
                main_entry.device_entries.each { |device_entry| row[device_mappings[device_entry.device.id]] = device_entry.policy_mbytes_received }
-            
+               
                rows << row
             end
          end

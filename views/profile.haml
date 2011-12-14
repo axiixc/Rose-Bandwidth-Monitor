@@ -67,7 +67,8 @@
         function drawChart() {
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Timestamp');
-            data.addColumn('number', 'Total');
+            data.addColumn('number', 'Policy Down');
+            data.addColumn('number', 'Policy Up');
             #{report[:devices].map{ |device| "data.addColumn('number', '#{device[:display_name]}');" }.join ' '}
             data.addRows(#{ report[:rows].to_json });
 
