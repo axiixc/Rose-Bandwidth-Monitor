@@ -1,8 +1,21 @@
 module Rose
    class Device
+      def self.api_representation(user)
+         raise nil if user.nil?
+         
+         user.devices.map do |device|
+            {
+               user: user.username,
+               network_address: device.network_address,
+               host: device.host,
+               preferred_name: device.preferred_name
+            }
+         end
+      end
+      
       def display_name
-         (not self.preferred_name.to_s.empty?) ? self.preferred_name : 
-         (not self.host.to_s.empty?) ? self.host : self.network_address
+         (!self.preferred_name.to_s.empty?) ? self.preferred_name : 
+         (!self.host.to_s.empty?) ? self.host : self.network_address
       end
       
       def add_bandwidth_entry(scrape_dict, main_entry)

@@ -59,5 +59,25 @@ module Rose
             ).add_bandwidth_entry(device_dict, main_entry) 
          end
       end
+      
+      def api_representation(level = :minimal)
+         if level == :full
+            {
+               id: self.id,
+               username: self.username,
+               display_name: self.display_name,
+               public_stats: self.public_stats,
+               active: self.active,
+               notification_warn_level: self.notification_warn_level
+            }
+         else
+            {
+               id: self.id,
+               username: self.username,
+               display_name: self.display_name,
+               public_stats: self.public_stats
+            }
+         end
+      end
    end
 end

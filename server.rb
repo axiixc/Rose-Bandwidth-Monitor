@@ -5,12 +5,28 @@ require 'haml'
 require 'date'
 require 'json'
 
-Dir['models/*'].each { |model| require './' + model }
-Dir['routes/*'].each { |route| require './' + route }
-Dir['notification_providers/*'].each { |provider| require './' + provider }
-require './date_time_util'
+[ 'models', 'routes', 'notification_providers' ].each do |dir_name|
+   Dir["#{dir_name}/*"].each { |file| require "./#{file}" }
+end
 
-require './config'
+configure :production do
+   Rose.setup_datamapper
+end
+
+configure :development do
+   Rose.setup_datamapper false
+   Rose::User.all.each do |user|
+      user.update :full_name => nil
+   end
+end
+
+configure do
+   enable :sessions
+   Rose.reset_caches
+
+   EXCLUSIVE_PATHS = [ '/login', '/register' ]
+   UNPROTECTED_PATHS = [ '/backdoor', '/userlist', '/profile', '/api' ] + EXCLUSIVE_PATHS
+end
 
 helpers do
    def login_user(user = nil)

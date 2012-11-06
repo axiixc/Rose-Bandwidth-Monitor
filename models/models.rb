@@ -3,7 +3,7 @@ require 'data_mapper'
 require 'dm-types'
 
 module Rose
-   def Rose.setup_datamapper(use_production = false, verbose = false)
+   def Rose.setup_datamapper use_production = true, verbose = false
       DataMapper::Logger.new($stdout, :debug) if verbose
       
       database_location = use_production ? 'stats.sqlite' : 'development-stats.sqlite'
@@ -14,6 +14,12 @@ module Rose
       
       DataMapper.finalize
       DataMapper.auto_upgrade!
+   end
+   
+   def Rose.reset_caches
+      Dir.mkdir 'caches' unless File.exists? 'caches/'
+      Dir.mkdir 'caches/reports' unless File.exists? 'caches/reports/'
+      Dir['caches/reports/*'].each { |f| File::delete(f) }
    end
    
    class User
