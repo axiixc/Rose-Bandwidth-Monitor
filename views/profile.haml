@@ -1,9 +1,9 @@
+- scrape_button_value = 'Scrape Now'
 - if @profile_user.nil?
     .container.notification.error
         %p Invalid Username or API Token
 
 - else
-    - report = @profile_user.report_with_name :basic
     - usage = @profile_user.current_usage
 
     - if @profile_user != @session_user && !@profile_using_api_token
@@ -36,49 +36,87 @@
                             %tr
                                 %td.loading{:valign => :middle} Loading Chart Data...
                 - if @profile_user == @session_user
-                    %input#force_scrape{:type => :button, :value => "Scrape Now"}
+                    %input#force_scrape{:type => :button, :value => scrape_button_value}
                     %span.form_appendage= "last updated #{usage.data_age}"
                 - else
                     %label.final= "updated #{usage.data_age}"
 
     :javascript
-        // jQuery function, called when page load is complete
-        $(document).ready(function() {
-            // when the window is resized, redraw the graph to the new size
-            $(window).bind("resize", function(event) {
-                if ($('#chart_div').width() != $('#chart_div').children()[0].width)
-                    drawChart();
-            });	
-
-            $('#force_scrape').bind("click", function(event) {
-                $('#force_scrape').attr('disabled', 'disabled');
-                $('#force_scrape').attr('value', 'Hold on...');
-                $.ajax({
-                    type: "POST",
-                    url: "#{url('/force_scrape')}",
-                    success: function() { location.reload(); },
-                    error: function() { location.reload(); }
-                });
-            });
-        });
-
-        google.load("visualization", "1", {packages:["corechart"]});
-        google.setOnLoadCallback(drawChart);
-        function drawChart() {
-            var data = new google.visualization.DataTable();
-            data.addColumn('string', 'Timestamp');
-            data.addColumn('number', 'Policy Down');
-            data.addColumn('number', 'Policy Up');
-            #{report[:devices].map{ |device| "data.addColumn('number', '#{device[:display_name]}');" }.join ' '}
-            data.addRows(#{ report[:rows].to_json });
-
+        var chartData = null;
+        function redrawChart(rawChartData)
+        {
+            if (rawChartData && google.visualization)
+            {
+                chartData = new google.visualization.DataTable();
+                
+                chartData.addColumn('string', 'Timestamp');
+                chartData.addColumn('number', 'Policy Down');
+                chartData.addColumn('number', 'Policy Up');
+                
+                var idx, len = rawChartData.devices.length;
+                for (idx = 0; idx < len; idx++) {
+                    chartData.addColumn('number', rawChartData.devices[idx].display_name);
+                }
+                chartData.addRows(rawChartData.rows);
+            }
+            
+            if (!chartData) {
+                return;
+            }
+            
             var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
-            chart.draw(data, {
+            if (!chart) {
+                return;
+            }
+            
+            chart.draw(chartData, {
                 legend: 'bottom', 
                 backgroundColor: '#FCFCFC',
-                areaOpacity: 1 / data.getNumberOfColumns(),
+                areaOpacity: 1 / chartData.getNumberOfColumns(),
                 hAxis: { textPosition: 'none', direction: -1 }, 
                 vAxis: { minValue: 0, format: "#,### MB", textPosition: 'in' }, 
                 chartArea: { top: 0, left: 0, height: "85%", width: "100%" }
             });
         }
+    
+        // jQuery function, called when page load is complete
+        google.load('visualization', '1', {packages:["corechart"]});
+        google.setOnLoadCallback(function() {
+            $.ajax('/_api/report', {
+                success: function(data) {
+                    redrawChart(JSON.parse(data));
+                },
+                error: function() {
+                    var msgNode = $('#chart_div .loading')
+                    if (msgNode) {
+                        msgNode.text('Error Loading Chart Data');
+                    }
+                }
+            });
+        });
+        
+        $(document).ready(function() {
+            // when the window is resized, redraw the graph to the new size
+            $(window).bind("resize", function(event) {
+                if ($('#chart_div').width() != $('#chart_div').children()[0].width)
+                    redrawChart();
+            });	
+        
+            var scrapeButton = $('#force_scrape');
+            scrapeButton.bind('click', function(event) {
+                scrapeButton.attr('disabled', true);
+                scrapeButton.attr('value', 'Hold on...');
+                $.ajax({
+                    url: '/_api/report?scrape_first',
+                    success: function(data) {
+                        redrawChart(JSON.parse(data));
+                        scrapeButton.attr('disabled', false);
+                        scrapeButton.attr('value', '#{scrape_button_value}');
+                    },
+                    error: function() {
+                        scrapeButton.attr('disabled', false);
+                        scrapeButton.attr('value', 'Error: Scrape Failed');
+                    }
+                });
+            });
+        });

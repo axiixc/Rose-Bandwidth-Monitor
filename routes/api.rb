@@ -11,6 +11,11 @@ get '/api/info/?' do
 	}.to_json
 end
 
+get '/_api/report/?' do
+	return @session_user.scrape.to_json if params[:scrape_first]
+	@session_user.report_with_name(:basic).to_json
+end
+
 get '/api/:username/devices/?' do |username|
 	{
 		devices: Rose::Device.api_representation(api_user(username))

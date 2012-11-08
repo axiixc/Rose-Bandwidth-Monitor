@@ -8,7 +8,7 @@ module Rose
                user: user.username,
                network_address: device.network_address,
                host: device.host,
-               preferred_name: device.preferred_name
+               display_name: device.display_name
             }
          end
       end
