@@ -7,7 +7,7 @@ end
 Rose.setup_datamapper ARGV.include? '--production'
 Rose.reset_caches
 
-Sleep_interval = 15
+Sleep_interval = 5
 
 loop do
    Rose::ScrapeEvent.scrape_all

@@ -34,7 +34,7 @@ module Rose
       property :public_stats, Boolean, :default => false
       property :active, Boolean, :default => true
       property :last_status_code, String
-      property :notification_warn_level, Float, :default => 3500.0
+      property :notification_warn_level, Float, :default => 6000.0
       property :notification_last_bandwidth_class_value, Float, :default => -1.0
       property :notification_enabled, Boolean, :default => false
       property :notification_boxcar_email, String
