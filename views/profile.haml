@@ -20,7 +20,6 @@
                 %input#force_scrape{:type => :button, :value => "Scrape Now"}
     - else
         .container
-            %script{ :src => url('/js/graph.js') }
             %h1
                 Usage
                 %span.capsule{:class => usage.bandwidth_class == 0 ? :c_green : :g_red}= usage.bandwidth_class_string.capitalize
@@ -45,3 +44,4 @@
                     %span.form_appendage= "last updated #{usage.data_age}"
                 - else
                     %label.final= "updated #{usage.data_age}"
+        %script{ :src => url('/js/chart.js'), :onload => "initChart('#{@profile_user.username}');" }
