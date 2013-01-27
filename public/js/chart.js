@@ -68,7 +68,7 @@ function initChart(token) {
 			$.ajax({
 				url: '/_api/' + token + '/report?scrape_first',
 				success: function(data) {
-					redrawChart(JSON.parse(data));
+					redrawChart(data);
 					scrapeButton.attr('disabled', false);
 					scrapeButton.attr('value', '#{scrape_button_value}');
 				},
