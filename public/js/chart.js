@@ -41,7 +41,7 @@ function initChart(token) {
 	google.setOnLoadCallback(function() {
 		$.ajax('/_api/' + token + '/report', {
 			success: function(data) {
-				redrawChart(JSON.parse(data));
+				redrawChart(data);
 			},
 			error: function() {
 				$('#chart_div .spinner').remove();
