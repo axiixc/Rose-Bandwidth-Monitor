@@ -1,5 +1,3 @@
-require './date_time_util'
-
 ['models', 'notification_providers'].each do |dir_name|
    Dir["#{dir_name}/*"].each { |file| require "./#{file}" }
 end

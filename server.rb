@@ -25,7 +25,7 @@ configure do
    Rose.reset_caches
 
    EXCLUSIVE_PATHS = [ '/login', '/register' ]
-   UNPROTECTED_PATHS = [ '/backdoor', '/userlist', '/profile', '/api' ] + EXCLUSIVE_PATHS
+   UNPROTECTED_PATHS = [ '/backdoor', '/userlist', '/profile', '/api', '/_api' ] + EXCLUSIVE_PATHS
 end
 
 helpers do
