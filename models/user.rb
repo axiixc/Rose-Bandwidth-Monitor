@@ -79,5 +79,11 @@ module Rose
             }
          end
       end
+      
+      def self.api_representation
+         Rose::User.all( :public_stats => true, :order => [ :username.asc ] ).map do |user|
+            user.api_representation(:minimal)
+         end
+      end
    end
 end
