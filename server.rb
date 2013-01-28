@@ -32,7 +32,7 @@ helpers do
    def login_user(user = nil)
       user = Rose::User.first(:username => session[:username], :pwhash => session[:pwhash]) if user.nil?
       
-      if not user.nil?
+      if !user.nil?
          session[:username] = user.username
          session[:pwhash] = user.pwhash
          @session_user = user
@@ -58,14 +58,16 @@ helpers do
    end
    
    def _request_path_in(paths)
-      paths.each { |path| return true if request.path_info == path or request.path_info[0...path.size] == path }
+      paths.each do |path| 
+         return true if request.path_info == path || request.path_info[0...path.size] == path
+      end
       return false
    end
 end
 
 before do
    # If the user is not logged in only allow access to unprotected paths
-   if password_doesnt_match_user?(params[:username], params[:pwhash]) && (not unprotected_user_path?)
+   if password_doesnt_match_user?(params[:username], params[:pwhash]) && !unprotected_user_path?
       redirect '/login'
       
    # If the user is logged in don't let them see the register and login paths
@@ -77,13 +79,9 @@ before do
    login_user
 end
 
-post '/force_scrape' do
-   @session_user.scrape unless @session_user.nil?
-end
-
 get '/debug' do
    haml :debug
-end
+end if ENV['RACK_ENV'] == :development
 
 get '/backdoor/?' do
    user = Rose::User.first(:username => params[:username])
