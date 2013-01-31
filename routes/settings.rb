@@ -38,7 +38,7 @@ end
 
 post '/settings/password/?' do
    # Only update password if current is passed
-   if not params[:current_password].empty?
+   if !params[:current_password].empty?
       pwhash = Rose::User.hash_password params[:current_password]
       if pwhash != @session_user.pwhash
          @session_user.add_notification "Current Password Invalid", :error
@@ -50,6 +50,8 @@ post '/settings/password/?' do
          @session_user.add_notification "Password Updated", :success 
       end
    end
+   
+   redirect '/'
 end
 
 post '/settings/profile/?' do
