@@ -87,7 +87,7 @@ module Rose
             return iterate_over_user(user) do |rows, row_length, device_mappings, main_entry|
                row = Array.new row_length, 0.0
                
-               row[0] = main_entry.pretty_timestamp
+               row[0] = main_entry.data_age
                row[1] = main_entry.policy_mbytes_received
                row[2] = main_entry.policy_mbytes_sent
                main_entry.device_entries.each { |device_entry| row[device_mappings[device_entry.device.id]] = device_entry.policy_mbytes_received }

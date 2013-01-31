@@ -25,7 +25,7 @@ module Rose
       end
       
       def data_age
-         Rose.humanize_pretty DateTime.now - self.timestamp
+         Rose.humanize_pretty (Time.now - self.timestamp.to_time)
       end
       
       def self.api_representation(user, window_length = 60 * 60 * 36)
