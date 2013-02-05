@@ -70,7 +70,7 @@ function initChart(token) {
 				success: function(data) {
 					redrawChart(data);
 					scrapeButton.attr('disabled', false);
-					scrapeButton.attr('value', '#{scrape_button_value}');
+					scrapeButton.attr('value', 'Scrape Now');
 				},
 				error: function() {
 					scrapeButton.attr('disabled', false);

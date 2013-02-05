@@ -43,5 +43,5 @@
                     %input#force_scrape{:type => :button, :value => scrape_button_value}
                     %span.form_appendage= "last updated #{usage.data_age}"
                 - else
-                    %label.final= "updated #{usage.data_age}"
+                    %label#chart_data_age.final= "updated #{usage.data_age}"
         %script{ :src => url('/js/chart.js'), :onload => "initChart('#{@profile_user.username}');" }
