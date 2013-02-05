@@ -41,7 +41,7 @@
                                     Loading Chart Data...
                 - if @profile_user == @session_user
                     %input#force_scrape{:type => :button, :value => scrape_button_value}
-                    %span.form_appendage= "last updated #{usage.data_age}"
+                    %span#chart_data_age.form_appendage{ :prefix => "Last updated "} &nbsp;
                 - else
-                    %label#chart_data_age.final= "updated #{usage.data_age}"
+                    %label#chart_data_age.final{ :prefix => "updated " } &nbsp;
         %script{ :src => url('/js/chart.js'), :onload => "initChart('#{@profile_user.username}');" }

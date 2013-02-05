@@ -26,6 +26,9 @@ function initChart(token) {
 			return;
 		}
 	
+		var chartLabel = $('#chart_data_age');
+		chartLabel.text( chartLabel.attr('prefix') + rawChartData.metadata.last_scrape );
+		
 		chart.draw(chartData, {
 			legend: 'bottom', 
 			backgroundColor: '#FCFCFC',

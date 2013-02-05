@@ -25,10 +25,10 @@ get '/_api/:token/report/?' do |token|
 	halt(404) if profile_user.nil?
 	
 	content_type :json
-	(params.include?('scrape_first') ?
-		profile_user.scrape :
-		profile_user.report_with_name(:basic)
-	).to_json
+	payload = params.include?('scrape_first') ? profile_user.scrape :	profile_user.report_with_name(:basic)
+	payload[:metadata][:last_scrape] = profile_user.current_usage.data_age
+	
+	payload.to_json
 end
 
 get '/api/userlist' do
