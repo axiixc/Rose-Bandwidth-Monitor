@@ -192,6 +192,7 @@ div#chart_container {
 
 div#chart_div {
 	height: 300px;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
 .loading {

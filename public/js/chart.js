@@ -7,8 +7,8 @@ function initChart(token) {
 			chartData = new google.visualization.DataTable();
 	
 			chartData.addColumn('string', 'Timestamp');
-			chartData.addColumn('number', 'Policy Down');
-			chartData.addColumn('number', 'Policy Up');
+			chartData.addColumn('number', 'Down');
+			chartData.addColumn('number', 'Up');
 	
 			var idx, len = rawChartData.devices.length;
 			for (idx = 0; idx < len; idx++) {
